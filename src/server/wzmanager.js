@@ -1,12 +1,12 @@
-'use strict';
+"use strict";
 
 /**
  * Module dependencies.
  * @private
  */
-const fs = require('fs');
-const path = require('path');
-const WZNode = require('./wznode').WZNode;
+const fs = require("fs");
+const path = require("path");
+const WZNode = require("./wznode").WZNode;
 
 /**
  * Module exports.
@@ -17,7 +17,7 @@ module.exports = {
   get,
 };
 
-const cache = new WZNode({ '$dir': '' });
+const cache = new WZNode({ $dir: "" });
 
 /**
  * Loads server WZ files.
@@ -40,7 +40,7 @@ function load(wzDir) {
  */
 function get(thePath) {
   let tree = cache;
-  thePath.split('/').forEach(p => {
+  thePath.split("/").forEach((p) => {
     tree = tree[p];
   });
   return tree;
@@ -53,7 +53,7 @@ function get(thePath) {
  */
 function loadRecursive(dir) {
   if (fs.statSync(dir).isDirectory()) {
-    fs.readdirSync(dir).forEach(subDir => {
+    fs.readdirSync(dir).forEach((subDir) => {
       loadRecursive(path.join(dir, subDir));
     });
   } else {
@@ -68,16 +68,19 @@ function loadRecursive(dir) {
  */
 function loadFile(filename) {
   const normalizedFilename = normalizeFilename(filename);
-  const json = fs.readFileSync(filename, 'utf8');
-  
+  const json = fs.readFileSync(filename, "utf8");
+
   let tree = cache;
-  normalizedFilename.split('/').slice(0, -1).forEach(p => {
-    if (!(p in tree)) {
-      tree[p] = new WZNode({ '$dir': p }, tree);
-      tree.nChildren.push(tree[p]);
-    }
-    tree = tree[p];
-  });
+  normalizedFilename
+    .split("/")
+    .slice(0, -1)
+    .forEach((p) => {
+      if (!(p in tree)) {
+        tree[p] = new WZNode({ $dir: p }, tree);
+        tree.nChildren.push(tree[p]);
+      }
+      tree = tree[p];
+    });
 
   const subtree = new WZNode(JSON.parse(json), tree);
   tree[subtree.nName] = subtree;
@@ -94,8 +97,8 @@ function loadFile(filename) {
  * @private
  */
 function normalizeFilename(filename) {
-  const [wzPart, rest] = filename.split('.wz');
-  const wzDir = wzPart.split('/').pop();
-  const noFiletype = rest.replace('.json', '');
-  return [wzDir, '.wz', noFiletype].join('');
+  const [wzPart, rest] = filename.split(".wz");
+  const wzDir = wzPart.split("/").pop();
+  const noFiletype = rest.replace(".json", "");
+  return [wzDir, ".wz", noFiletype].join("");
 }

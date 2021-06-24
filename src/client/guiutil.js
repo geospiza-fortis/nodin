@@ -11,7 +11,7 @@ const GUIUtil = {};
  * @param {int} rectangle.height - Height of rectangle.
  * @return {Boolean} True if point is within rectangle, false otherwise.
  */
-GUIUtil.pointInRectangle = function(point, rectangle) {
+GUIUtil.pointInRectangle = function (point, rectangle) {
   return (
     point.x >= rectangle.x &&
     point.x < rectangle.x + rectangle.width &&
@@ -33,10 +33,12 @@ GUIUtil.pointInRectangle = function(point, rectangle) {
  * @param {int} r2.height - Height of rectangle 2.
  * @return {Boolean} True if rectangles overlap, false otherwise.
  */
-GUIUtil.rectanglesOverlap = function(r1, r2) {
-  const xOverlap = (r1.x >= r2.x && r1.x < r2.x + r2.width) ||
+GUIUtil.rectanglesOverlap = function (r1, r2) {
+  const xOverlap =
+    (r1.x >= r2.x && r1.x < r2.x + r2.width) ||
     (r2.x >= r1.x && r2.x < r1.x + r1.width);
-  const yOverlap = (r1.y >= r2.y && r1.y < r2.y + r2.height) ||
+  const yOverlap =
+    (r1.y >= r2.y && r1.y < r2.y + r2.height) ||
     (r2.y >= r1.y && r2.y < r1.y + r1.height);
   return xOverlap && yOverlap;
 };
@@ -53,7 +55,7 @@ GUIUtil.rectanglesOverlap = function(r1, r2) {
  * @param {int} dy - Destination y.
  * @return {Boolean} True if image is within viewport, false otherwise.
  */
-GUIUtil.imageInView = function(camera, img, dx, dy) {
+GUIUtil.imageInView = function (camera, img, dx, dy) {
   const r1 = {
     x: camera.x,
     y: camera.y,

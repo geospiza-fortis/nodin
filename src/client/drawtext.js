@@ -1,4 +1,4 @@
-import CANVAS_CTX from './canvasctx';
+import CANVAS_CTX from "./canvasctx";
 
 /**
  * Draws text onto canvas.
@@ -13,20 +13,20 @@ import CANVAS_CTX from './canvasctx';
  * @param {string} [opts.fontFamily='Arial'] - Font family.
  * @param {string} [opts.align='left'] - Alignment relative to destination x.
  */
-function DRAW_TEXT(opts={}) {
-  const text = opts.text || '';
+function DRAW_TEXT(opts = {}) {
+  const text = opts.text || "";
   const x = opts.x || 0;
   const y = opts.y || 0;
-  const color = opts.color || '#000000';
-  const fontWeight = opts.fontWeight || '';
-  const fontStyle = opts.fontStyle || '';
+  const color = opts.color || "#000000";
+  const fontWeight = opts.fontWeight || "";
+  const fontStyle = opts.fontStyle || "";
   const fontSize = opts.fontSize || 12;
-  const fontFamily = opts.fontFamily || 'Arial';
-  const textAlign = opts.align || 'left';
+  const fontFamily = opts.fontFamily || "Arial";
+  const textAlign = opts.align || "left";
 
   CANVAS_CTX.save();
 
-  CANVAS_CTX.textBaseline = 'top';
+  CANVAS_CTX.textBaseline = "top";
   CANVAS_CTX.fillStyle = color;
   CANVAS_CTX.font = `${fontWeight} ${fontStyle} ${fontSize}px ${fontFamily}`;
   CANVAS_CTX.textAlign = textAlign;

@@ -7,7 +7,7 @@ const Random = {};
  * @param {int} max - Maximum.
  * @return {int} Random integer.
  */
-Random.randInt = function(min, max) {
+Random.randInt = function (min, max) {
   return min + Math.floor(Math.random() * (max - min + 1));
 };
 
@@ -20,7 +20,7 @@ Random.randInt = function(min, max) {
  * @param {float} probability - Probability of success.
  * @return {Boolean} True if success, false otherwise.
  */
-Random.chance = function(probability) {
+Random.chance = function (probability) {
   return probability > Math.random();
 };
 
@@ -32,15 +32,15 @@ Random.chance = function(probability) {
  *
  * @return {Array} Random stats.
  */
-Random.generateDiceRollStats = function() {
+Random.generateDiceRollStats = function () {
   const randInt = Random.randInt;
-  const diffArr = [0, randInt(0, 9), randInt(0, 9), randInt(0, 9), 9, ];
-  diffArr.sort((a, b) => a-b);
+  const diffArr = [0, randInt(0, 9), randInt(0, 9), randInt(0, 9), 9];
+  diffArr.sort((a, b) => a - b);
   return [
-    4 + diffArr[1]-diffArr[0],
-    4 + diffArr[2]-diffArr[1],
-    4 + diffArr[3]-diffArr[2],
-    4 + diffArr[4]-diffArr[3],
+    4 + diffArr[1] - diffArr[0],
+    4 + diffArr[2] - diffArr[1],
+    4 + diffArr[3] - diffArr[2],
+    4 + diffArr[4] - diffArr[3],
   ];
 };
 

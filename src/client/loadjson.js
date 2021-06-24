@@ -5,7 +5,7 @@
  * @return {Promise} Resolve JSON when done loading.
  */
 function LOAD_JSON(filename) {
-  return fetch(filename).then(res => res.json());
+  return fetch(filename).then((res) => res.json());
 }
 
 export default LOAD_JSON;

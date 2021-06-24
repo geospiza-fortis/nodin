@@ -1,4 +1,4 @@
-import GameCanvas from './gamecanvas';
+import GameCanvas from "./gamecanvas";
 
 class MapleInput {
   constructor(opts) {
@@ -6,30 +6,32 @@ class MapleInput {
     const y = opts.y || 0;
     const width = opts.width || 150;
     const height = opts.height || 12;
-    const background = opts.background || 'transparent';
-    const border = opts.border || 'none';
-    const color = opts.color || '#000000';
+    const background = opts.background || "transparent";
+    const border = opts.border || "none";
+    const color = opts.color || "#000000";
     const fontSize = opts.fontSize || 12;
-    const cursor = opts.cursor || 'none';
-    const type = opts.type || 'text';
+    const cursor = opts.cursor || "none";
+    const type = opts.type || "text";
     const focusListeners = opts.focusListeners || [];
     const focusoutListeners = opts.focusoutListeners || [];
     const submitListeners = opts.submitListeners || [];
-    const input = document.createElement('input');
+    const input = document.createElement("input");
 
     this.opts = opts;
     this.input = input;
     this.focusListeners = [
-      () => { GameCanvas.focusInput = true; },
+      () => {
+        GameCanvas.focusInput = true;
+      },
       ...focusListeners,
     ];
     this.focusoutListeners = [
-      () => { GameCanvas.focusInput = false; },
+      () => {
+        GameCanvas.focusInput = false;
+      },
       ...focusoutListeners,
     ];
-    this.submitListeners = [
-      ...submitListeners
-    ];
+    this.submitListeners = [...submitListeners];
 
     input.style.left = `${x}px`;
     input.style.top = `${y}px`;
@@ -42,17 +44,17 @@ class MapleInput {
     input.style.cursor = cursor;
     input.type = type;
 
-    input.addEventListener('focus', () => {
-      this.focusListeners.forEach(listener => listener());
+    input.addEventListener("focus", () => {
+      this.focusListeners.forEach((listener) => listener());
     });
-    input.addEventListener('focusout', () => {
-      this.focusoutListeners.forEach(listener => listener());
+    input.addEventListener("focusout", () => {
+      this.focusoutListeners.forEach((listener) => listener());
     });
-    input.addEventListener('keydown', e => {
+    input.addEventListener("keydown", (e) => {
       if (e.keyCode === GameCanvas.keys.enter) {
         e.preventDefault();
         e.stopPropagation();
-        this.submitListeners.forEach(listener => listener());
+        this.submitListeners.forEach((listener) => listener());
       }
     });
 

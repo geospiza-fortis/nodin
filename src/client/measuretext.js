@@ -1,4 +1,4 @@
-import CANVAS_CTX from './canvasctx';
+import CANVAS_CTX from "./canvasctx";
 
 /**
  * Measures text.
@@ -11,17 +11,17 @@ import CANVAS_CTX from './canvasctx';
  * @param {string} [opts.fontFamily='Arial'] - Font family.
  * @return {TextMetrics} Text measurements given options.
  */
-function MEASURE_TEXT(opts={}) {
-  const text = opts.text || '';
-  const color = opts.color || '#000000';
-  const fontWeight = opts.fontWeight || '';
-  const fontStyle = opts.fontStyle || '';
+function MEASURE_TEXT(opts = {}) {
+  const text = opts.text || "";
+  const color = opts.color || "#000000";
+  const fontWeight = opts.fontWeight || "";
+  const fontStyle = opts.fontStyle || "";
   const fontSize = opts.fontSize || 12;
-  const fontFamily = opts.fontFamily || 'Arial';
+  const fontFamily = opts.fontFamily || "Arial";
 
   CANVAS_CTX.save();
 
-  CANVAS_CTX.textBaseline = 'top';
+  CANVAS_CTX.textBaseline = "top";
   CANVAS_CTX.fillStyle = color;
   CANVAS_CTX.font = `${fontWeight} ${fontStyle} ${fontSize}px ${fontFamily}`;
 

@@ -1,33 +1,33 @@
-import DRAW_IMAGE from './drawimage';
-import DRAW_TEXT from './drawtext';
-import GameCanvas from './gamecanvas';
-import MyCharacter from './mycharacter';
-import WZManager from './wzmanager';
-import UICommon from './uicommon';
-import MapleInput from './mapleinput';
-import MapleMap from './maplemap';
+import DRAW_IMAGE from "./drawimage";
+import DRAW_TEXT from "./drawtext";
+import GameCanvas from "./gamecanvas";
+import MyCharacter from "./mycharacter";
+import WZManager from "./wzmanager";
+import UICommon from "./uicommon";
+import MapleInput from "./mapleinput";
+import MapleMap from "./maplemap";
 
 const UIMap = {};
 
-UIMap.initialize = async function() {
+UIMap.initialize = async function () {
   await UICommon.initialize();
 
-  const basic = await WZManager.get('UI.wz/Basic.img');
-  this.statusBarLevelDigits = basic.LevelNo.nChildren.map(d => d.nGetImage());
-  
+  const basic = await WZManager.get("UI.wz/Basic.img");
+  this.statusBarLevelDigits = basic.LevelNo.nChildren.map((d) => d.nGetImage());
+
   this.chat = new MapleInput({
     x: 5,
     y: 540,
     width: 530,
-    color: '#000000',
-    background: '#ffffff',
-    height: 13
+    color: "#000000",
+    background: "#ffffff",
+    height: 13,
   });
   this.chat.addSubmitListener(() => {
     const msg = this.chat.input.value;
-    this.chat.input.value = '';
-    if (msg[0] === '!') {
-      const [command, ...commandArgs] = msg.split(' ');
+    this.chat.input.value = "";
+    if (msg[0] === "!") {
+      const [command, ...commandArgs] = msg.split(" ");
       console.log(command, commandArgs);
       switch (command) {
         case "!level": {
@@ -56,8 +56,8 @@ UIMap.initialize = async function() {
     }
     GameCanvas.releaseFocusInput();
   });
-  
-  const statusBar = await WZManager.get('UI.wz/StatusBar.img');
+
+  const statusBar = await WZManager.get("UI.wz/StatusBar.img");
   this.statusBg = statusBar.base.backgrnd.nGetImage();
   this.statusBg2 = statusBar.base.backgrnd2.nGetImage();
   this.bars = statusBar.gauge.bar.nGetImage();
@@ -70,14 +70,18 @@ UIMap.initialize = async function() {
   }, {});
 };
 
-UIMap.doUpdate = function(msPerTick) {
-  if (!GameCanvas.focusInput && GameCanvas.focusGame && GameCanvas.isKeyDown('enter')) {
+UIMap.doUpdate = function (msPerTick) {
+  if (
+    !GameCanvas.focusInput &&
+    GameCanvas.focusGame &&
+    GameCanvas.isKeyDown("enter")
+  ) {
     this.chat.input.focus();
   }
   UICommon.doUpdate(msPerTick);
 };
 
-UIMap.drawLevel = function(level) {
+UIMap.drawLevel = function (level) {
   const dy = 576;
   if (level >= 100) {
     const first = Math.floor(level / 100);
@@ -120,14 +124,14 @@ UIMap.drawLevel = function(level) {
   }
 };
 
-UIMap.drawNumbers = function(hp, maxHp, mp, maxMp) {
+UIMap.drawNumbers = function (hp, maxHp, mp, maxMp) {
   DRAW_IMAGE({
     img: this.numbers.Lbracket,
     dx: 234,
     dy: 570,
   });
 
-  const hpX = [...`${hp}`, 'slash', ...`${maxHp}`].reduce((x, digit) => {
+  const hpX = [...`${hp}`, "slash", ...`${maxHp}`].reduce((x, digit) => {
     DRAW_IMAGE({
       img: this.numbers[digit],
       dx: x,
@@ -149,7 +153,7 @@ UIMap.drawNumbers = function(hp, maxHp, mp, maxMp) {
     dy: 570,
   });
 
-  const mpX = [...`${mp}`, 'slash', ...`${maxMp}`].reduce((x, digit) => {
+  const mpX = [...`${mp}`, "slash", ...`${maxMp}`].reduce((x, digit) => {
     DRAW_IMAGE({
       img: this.numbers[digit],
       dx: x,
@@ -166,7 +170,7 @@ UIMap.drawNumbers = function(hp, maxHp, mp, maxMp) {
   });
 };
 
-UIMap.doRender = function(camera, lag, msPerTick, tdelta) {
+UIMap.doRender = function (camera, lag, msPerTick, tdelta) {
   DRAW_IMAGE({
     img: this.statusBg,
     dx: 0,
@@ -183,7 +187,7 @@ UIMap.doRender = function(camera, lag, msPerTick, tdelta) {
 
   DRAW_TEXT({
     text: MyCharacter.name,
-    color: '#ffffff',
+    color: "#ffffff",
     x: 85,
     y: 585,
   });

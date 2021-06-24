@@ -1,4 +1,4 @@
-import CANVAS_CTX from './canvasctx';
+import CANVAS_CTX from "./canvasctx";
 
 /**
  * Draws line onto canvas.
@@ -11,13 +11,13 @@ import CANVAS_CTX from './canvasctx';
  * @param {float} [opts.alpha=1] - Opacity.
  * @param {string] [opts.color='#000000'] - Color.
  */
-function DRAW_LINE(opts={}) {
+function DRAW_LINE(opts = {}) {
   const x1 = opts.x1 || 0;
   const y1 = opts.y1 || 0;
   const x2 = opts.x2 || 0;
   const y2 = opts.y2 || 0;
   const alpha = opts.alpha || 1;
-  const color = opts.color || '#000000';
+  const color = opts.color || "#000000";
   const width = opts.width || 1;
 
   CANVAS_CTX.save();

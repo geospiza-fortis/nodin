@@ -5,7 +5,7 @@ const REQUEST_ANIMATION_FRAME = (() => {
     window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame ||
     window.msRequestAnimationFrame ||
-    function(callback) {
+    function (callback) {
       setTimeout(() => {
         callback && callback();
       }, 1000 / 60);

@@ -1,4 +1,4 @@
-import CANVAS_CTX from './canvasctx';
+import CANVAS_CTX from "./canvasctx";
 
 /**
  * Draws image onto canvas.
@@ -26,45 +26,45 @@ import CANVAS_CTX from './canvasctx';
  * @param {int} [opts.ry=opts.dh*opts.scaleY/2] - Center y of rotation.
  * @param {float} [opts.alpha=1] - Opacity.
  */
-function DRAW_IMAGE(opts={}) {
+function DRAW_IMAGE(opts = {}) {
   const img = opts.img;
 
   if (!img) {
     return;
   }
 
-  const sx = !('sx' in opts) ? 0 : opts.sx;
-  const sy = !('sy' in opts) ? 0 : opts.sy;
-  const sw = !('sw' in opts) ? (img.width - sx) : opts.sw;
-  const sh = !('sh' in opts) ? (img.height - sy) : opts.sh;
+  const sx = !("sx" in opts) ? 0 : opts.sx;
+  const sy = !("sy" in opts) ? 0 : opts.sy;
+  const sw = !("sw" in opts) ? img.width - sx : opts.sw;
+  const sh = !("sh" in opts) ? img.height - sy : opts.sh;
 
-  const dx = !('dx' in opts) ? 0 : opts.dx;
-  const dy = !('dy' in opts) ? 0 : opts.dy;
-  const dw = !('dw' in opts) ? sw : opts.dw;
-  const dh = !('dh' in opts) ? sh : opts.dh;
+  const dx = !("dx" in opts) ? 0 : opts.dx;
+  const dy = !("dy" in opts) ? 0 : opts.dy;
+  const dw = !("dw" in opts) ? sw : opts.dw;
+  const dh = !("dh" in opts) ? sh : opts.dh;
 
-  const flipped = !('flipped' in opts) ? false : opts.flipped;
-  const angle = !('angle' in opts) ? 0 : opts.angle;
-  const alpha = !('alpha' in opts) ? 1 : opts.alpha;
-  const scaleX = !('scaleX' in opts) ? 1 : opts.scaleX;
-  const scaleY = !('scaleY' in opts) ? 1 : opts.scaleY;
+  const flipped = !("flipped" in opts) ? false : opts.flipped;
+  const angle = !("angle" in opts) ? 0 : opts.angle;
+  const alpha = !("alpha" in opts) ? 1 : opts.alpha;
+  const scaleX = !("scaleX" in opts) ? 1 : opts.scaleX;
+  const scaleY = !("scaleY" in opts) ? 1 : opts.scaleY;
 
-  const effectiveWidth = dw*scaleX;
-  const effectiveHeight = dh*scaleY;
+  const effectiveWidth = dw * scaleX;
+  const effectiveHeight = dh * scaleY;
 
-  const rx = !('rx' in opts) ? effectiveWidth/2 : opts.rx;
-  const ry = !('ry' in opts) ? effectiveHeight/2 : opts.ry;
+  const rx = !("rx" in opts) ? effectiveWidth / 2 : opts.rx;
+  const ry = !("ry" in opts) ? effectiveHeight / 2 : opts.ry;
 
   CANVAS_CTX.save();
 
   CANVAS_CTX.globalAlpha = alpha;
 
-  CANVAS_CTX.translate(dx+rx, dy+ry);
-  CANVAS_CTX.rotate((angle%360) * Math.PI/180);
+  CANVAS_CTX.translate(dx + rx, dy + ry);
+  CANVAS_CTX.rotate(((angle % 360) * Math.PI) / 180);
   CANVAS_CTX.translate(-rx, -ry);
 
   if (!!flipped) {
-    CANVAS_CTX.translate(img.width*scaleX*sw/img.width, 0);
+    CANVAS_CTX.translate((img.width * scaleX * sw) / img.width, 0);
     CANVAS_CTX.scale(-1, 1);
   }
 

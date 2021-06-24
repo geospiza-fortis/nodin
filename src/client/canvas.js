@@ -1,3 +1,3 @@
-const CANVAS = document.querySelector('#game');
+const CANVAS = document.querySelector("#game");
 
 export default CANVAS;

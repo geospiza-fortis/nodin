@@ -1,24 +1,24 @@
 const StateManager = {};
 
-StateManager.initialize = function() {
+StateManager.initialize = function () {
   this.currentState = undefined;
   this.transitioning = false;
 };
 
-StateManager.setState = async function(state) {
+StateManager.setState = async function (state) {
   this.transitioning = true;
   await state.initialize();
   this.currentState = state;
   this.transitioning = false;
 };
 
-StateManager.doUpdate = function(msPerTick, camera) {
+StateManager.doUpdate = function (msPerTick, camera) {
   if (!this.transitioning) {
     this.currentState.doUpdate(msPerTick, camera);
   }
 };
 
-StateManager.doRender = function(camera, lag, msPerTick, tdelta) {
+StateManager.doRender = function (camera, lag, msPerTick, tdelta) {
   if (!this.transitioning) {
     this.currentState.doRender(camera, lag, msPerTick, tdelta);
   }
