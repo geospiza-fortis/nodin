@@ -243,8 +243,7 @@ class MapleCharacter {
     if (this.delay > this.nextDelay) {
       this.advanceFrame();
     }
-    console.log(this.pos);
-    this.pos.update();
+    this.pos.update(msPerTick);
   }
   getDrawableFrames(stance, frame, flipped) {
     const imgdir = this.baseBody[stance][frame];

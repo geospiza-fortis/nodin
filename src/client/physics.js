@@ -55,10 +55,10 @@ class Physics {
     this.lf = null;
     this.djump = null;
   }
-  update() {
+  update(msPerTick) {
     let mleft = this.left && !this.right;
     let mright = !this.left && this.right;
-    let delta = 0.01;
+    let delta = msPerTick / 1000;
     let vx = this.vx;
     let vy = this.vy;
     let shoefloat = (float_drag_2 / shoe_mass) * delta;
