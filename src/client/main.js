@@ -17,6 +17,7 @@ async function startGame() {
   Timer.initialize();
   await MySocket.initialize();
   await StateManager.setState(LoginState);
+  await LoginState.enterGame();
 
   GameLoop.gameLoop();
 }

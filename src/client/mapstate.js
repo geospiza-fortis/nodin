@@ -9,7 +9,8 @@ const MapState = {};
 MapState.initialize = async function () {
   await MyCharacter.load();
   MyCharacter.activate();
-  await MapleMap.load(200000000);
+  // Henesys
+  await MapleMap.load(100000000);
   await UIMap.initialize();
 };
 
