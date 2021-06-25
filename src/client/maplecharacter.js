@@ -4,6 +4,7 @@ import DRAW_TEXT from "./drawtext";
 import DRAW_RECT from "./drawrect";
 import MEASURE_TEXT from "./measuretext";
 import PLAY_AUDIO from "./playaudio";
+import { Physics } from "./physics";
 
 class MapleCharacter {
   static async fromOpts(opts) {
@@ -38,11 +39,12 @@ class MapleCharacter {
 
     this.id = opts.id;
     this.name = opts.name;
-    this.x = opts.x;
-    this.y = opts.y;
     this.gender = opts.gender || 0;
     // male shirt = 1040036 male boxers = 1060026
     // female shirt = 1041046 female boxers = 1061039
+
+    // physics stuff
+    this.pos = new Physics();
   }
   async load() {
     const zmap = await WZManager.get("Base.wz/zmap.img");
@@ -241,6 +243,8 @@ class MapleCharacter {
     if (this.delay > this.nextDelay) {
       this.advanceFrame();
     }
+    console.log(this.pos);
+    this.pos.update();
   }
   getDrawableFrames(stance, frame, flipped) {
     const imgdir = this.baseBody[stance][frame];
@@ -407,8 +411,8 @@ class MapleCharacter {
     drawableFrames.forEach((frame) => {
       DRAW_IMAGE({
         img: frame.img,
-        dx: Math.floor(this.x + frame.x - camera.x + moveX),
-        dy: Math.floor(this.y + frame.y - camera.y + moveY),
+        dx: Math.floor(this.pos.x + frame.x - camera.x + moveX),
+        dy: Math.floor(this.pos.y + frame.y - camera.y + moveY),
         flipped: frameIsFlipped,
         rx: -frame.x,
         ry: -frame.y,
@@ -426,16 +430,16 @@ class MapleCharacter {
     const offsetFromY = 2;
     const nameOpts = {
       text: this.name,
-      x: Math.floor(this.x - camera.x),
-      y: Math.floor(this.y - camera.y + offsetFromY + 3),
+      x: Math.floor(this.pos.x - camera.x),
+      y: Math.floor(this.pos.y - camera.y + offsetFromY + 3),
       color: "#ffffff",
       align: "center",
     };
     const nameWidth = Math.ceil(MEASURE_TEXT(nameOpts).width + tagPadding);
-    const nameTagX = Math.round(this.x - camera.x - nameWidth / 2);
+    const nameTagX = Math.round(this.pos.x - camera.x - nameWidth / 2);
     DRAW_RECT({
       x: nameTagX,
-      y: Math.floor(this.y - camera.y + offsetFromY),
+      y: Math.floor(this.pos.y - camera.y + offsetFromY),
       width: nameWidth,
       height: tagHeight,
       color: tagColor,

@@ -23,6 +23,7 @@ class Foothold {
     this.next = wzNode.next.nValue;
     this.force = wzNode.nGet("force").nGet("nValue", 0);
     this.forbid = wzNode.nGet("forbidFallDown").nGet("nValue", 0);
+    this.cantThrough = wzNode.nGet("cantThrough").nGet("nValue", 0);
 
     this.isWall = this.x1 === this.x2;
     this.slope = !this.isWall ? (this.y2 - this.y1) / (this.x2 - this.x1) : 0;

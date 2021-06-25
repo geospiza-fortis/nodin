@@ -8,8 +8,6 @@ import Tile from "./tile";
 import Obj from "./obj";
 import NPC from "./npc";
 import Monster from "./monster";
-import MapleCharacter from "./maplecharacter";
-import MyCharacter from "./mycharacter";
 
 import AudioManager from "./audiomanager";
 import Camera from "./camera"; //debugging
@@ -44,11 +42,6 @@ MapleMap.load = async function (id) {
   this.names = await this.loadNames(id);
   await this.loadNPCs(this.wzNode.life);
   await this.loadMonsters(this.wzNode.life);
-
-  const xMid = Math.floor((this.boundaries.right + this.boundaries.left) / 2);
-  const yMid = Math.floor((this.boundaries.bottom + this.boundaries.top) / 2);
-  MyCharacter.x = xMid;
-  MyCharacter.y = yMid;
 
   Timer.doReset();
 
@@ -262,8 +255,6 @@ MapleMap.update = function (msPerTick) {
   this.monsters.forEach((mob) => mob.update(msPerTick));
   this.characters.forEach((chr) => chr.update(msPerTick));
   this.portals.forEach((p) => p.update(msPerTick));
-
-  MyCharacter.update(msPerTick);
 };
 
 MapleMap.render = function (camera, lag, msPerTick, tdelta) {
@@ -290,10 +281,6 @@ MapleMap.render = function (camera, lag, msPerTick, tdelta) {
   this.characters.filter(notInAnyLayer).forEach(draw);
   this.npcs.filter(notInAnyLayer).forEach(draw);
 
-  if (!!MyCharacter.active) {
-    MyCharacter.draw(camera, lag, msPerTick, tdelta);
-  }
-
   this.portals.forEach(draw);
 
   this.backgrounds.filter((bg) => !!bg.front).forEach(draw);
@@ -309,9 +296,6 @@ MapleMap.render = function (camera, lag, msPerTick, tdelta) {
     });
   };
   this.characters.filter((c) => !!c.levelingUp).forEach(drawLevelUp);
-  if (!!MyCharacter.levelingUp) {
-    drawLevelUp(MyCharacter);
-  }
   // draw damage
 
   Object.values(this.footholds).forEach(draw);

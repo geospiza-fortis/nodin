@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
-const Server = require('./src/server/server');
+const Server = require("./src/server/server");
 Server.run(__dirname);
