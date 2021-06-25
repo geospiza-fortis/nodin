@@ -61,32 +61,76 @@ class Physics {
     let delta = msPerTick / 1000;
     let vx = this.vx;
     let vy = this.vy;
-    let shoefloat = (float_drag_2 / shoe_mass) * delta;
-    vy > 0
-      ? (vy = Math.max(0, vy - shoefloat))
-      : (vy = Math.min(0, vy + shoefloat));
-    this.vy = Math.min(vy + gravity_acc * delta, fall_speed);
-    this.vx = mleft
-      ? vx > -float_drag_2 * float_multiplier
-        ? Math.max(-float_drag_2 * float_multiplier, vx - 2 * shoefloat)
-        : vx
-      : mright
-      ? vx < float_drag_2 * float_multiplier
-        ? Math.min(float_drag_2 * float_multiplier, vx + 2 * shoefloat)
-        : vx
-      : vy < fall_speed
-      ? vx > 0
-        ? Math.max(0, vx - float_coefficient * shoefloat)
-        : Math.min(0, vx + float_coefficient * shoefloat)
-      : vx > 0
-      ? Math.max(0, vx - shoefloat)
-      : Math.min(0, vx + shoefloat);
+    let fh = this.fh;
+
+    if (fh) {
+      const fx = fh.x2 - fh.x1,
+        fy = fh.y2 - fh.y1,
+        fx2 = fx * fx,
+        fy2 = fy * fy,
+        len = Math.sqrt(fx2 + fy2);
+      let mvr = (vx * len) / fx;
+      mvr -= fh.force;
+      let fs = (1 / shoe_mass) * delta;
+      let maxf = 1 * walk_speed * shoe_walk_speed;
+      let drag =
+        Math.max(Math.min(shoe_walk_drag, max_friction), min_friction) *
+        walk_drag;
+      let slip = fy / len;
+      if (shoe_walk_slant < Math.abs(slip)) {
+        let slipf = slip_force * slip;
+        let slips = slip_speed * slip;
+        mvr += mleft ? -drag * fs : mright ? drag * fs : 0;
+        mvr =
+          slips > 0
+            ? Math.min(slips, mvr + slipf * delta)
+            : Math.max(slips, mvr + slipf * delta);
+      } else {
+        mvr = mleft
+          ? mvr < -maxf
+            ? Math.min(-maxf, mvr + drag * fs)
+            : Math.max(-maxf, mvr - shoe_walk_acc * walk_force * fs)
+          : mright
+          ? mvr > maxf
+            ? Math.max(maxf, mvr - drag * fs)
+            : Math.min(maxf, mvr + shoe_walk_acc * walk_force * fs)
+          : mvr < 0
+          ? Math.min(0, mvr + drag * fs)
+          : mvr > 0
+          ? Math.max(0, mvr - drag * fs)
+          : mvr;
+      }
+      mvr += fh.force;
+      this.vx = (mvr * fx) / len;
+      this.vy = (mvr * fy) / len;
+    } else {
+      let shoefloat = (float_drag_2 / shoe_mass) * delta;
+      vy > 0
+        ? (vy = Math.max(0, vy - shoefloat))
+        : (vy = Math.min(0, vy + shoefloat));
+      this.vy = Math.min(vy + gravity_acc * delta, fall_speed);
+      this.vx = mleft
+        ? vx > -float_drag_2 * float_multiplier
+          ? Math.max(-float_drag_2 * float_multiplier, vx - 2 * shoefloat)
+          : vx
+        : mright
+        ? vx < float_drag_2 * float_multiplier
+          ? Math.min(float_drag_2 * float_multiplier, vx + 2 * shoefloat)
+          : vx
+        : vy < fall_speed
+        ? vx > 0
+          ? Math.max(0, vx - float_coefficient * shoefloat)
+          : Math.min(0, vx + float_coefficient * shoefloat)
+        : vx > 0
+        ? Math.max(0, vx - shoefloat)
+        : Math.min(0, vx + shoefloat);
+    }
     while (delta > epsilon) {
       let vx = this.vx;
       let vy = this.vy;
       let x = this.x;
       let y = this.y;
-      let fh = this.fh;
+      fh = this.fh;
 
       let dx1 = vx * delta;
       let dy1 = vy * delta;
