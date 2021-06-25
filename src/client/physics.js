@@ -2,7 +2,7 @@ import MapleMap from "./maplemap";
 
 /// https://github.com/NoLifeDev/NoLifeStory/blob/master/src/client/physics.cpp
 const down_jump_multiplier = 0.35355339;
-const epsilon = 0.00001;
+const epsilon = 2e-3;
 const fall_speed = 670;
 const float_coefficient = 0.01;
 const float_drag_1 = 100000;
@@ -54,6 +54,51 @@ class Physics {
     this.fh = null;
     this.lf = null;
     this.djump = null;
+  }
+  jump() {
+    let fh = this.fh;
+    let djump = this.djump;
+    let vx = this.vx;
+    let vy = this.vy;
+    let flying = false;
+    let x = this.x;
+    let y = this.y;
+    if (fh) {
+      if (
+        this.down &&
+        !fh.cantThrough &&
+        !fh.forbit &&
+        Object.values(MapleMap.footholds || {}).some((f) => {
+          return f.id != fh.id && f.x1 < x && f.x2 > x && f.y1 > y && f.y2 > y;
+        })
+      ) {
+        djump = fh;
+        vx = 0;
+        vy = -jump_speed * down_jump_multiplier;
+      } else {
+        vy = shoe_walk_jump * jump_speed * (flying ? -0.7 : -1);
+        let fx = fh.x2 - fh.x1,
+          fy = fh.y2 - fh.y1,
+          fmax = walk_speed * shoe_walk_speed;
+        (this.left && fy < 0) || (this.right && fy > 0)
+          ? (fmax *= 1 + (fy * fy) / (fx * fx + fy * fy))
+          : 0;
+        vx = this.left
+          ? Math.max(Math.min(vx, -fmax * 0.8), -fmax)
+          : this.right
+          ? Math.min(Math.max(vx, fmax * 0.8), fmax)
+          : vx;
+      }
+      fh = null;
+    } else {
+      if (flying) {
+        vy = -shoe_swim_speed_v * swim_jump;
+      }
+    }
+    this.fh = fh;
+    this.djump = djump;
+    this.vx = vx;
+    this.vy = vy;
   }
   update(msPerTick) {
     let mleft = this.left && !this.right;
@@ -126,10 +171,10 @@ class Physics {
         : Math.min(0, vx + shoefloat);
     }
     while (delta > epsilon) {
-      let vx = this.vx;
-      let vy = this.vy;
       let x = this.x;
       let y = this.y;
+      vx = this.vx;
+      vy = this.vy;
       fh = this.fh;
 
       if (fh) {

@@ -38,6 +38,7 @@ MapState.doUpdate = function (msPerTick) {
       MyCharacter.faceRight();
       MyCharacter.pos.right = true;
     }
+    if (GameCanvas.isKeyDown("alt")) MyCharacter.pos.jump();
     MyCharacter.update(msPerTick);
 
     // now unset if the key is not pressed
