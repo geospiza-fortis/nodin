@@ -58,202 +58,43 @@ class Physics {
   update() {
     let mleft = this.left && !this.right;
     let mright = !this.left && this.right;
-    let mup = this.up && !this.down;
-    let mdown = !this.up && !this.down;
-    let fh = this.fh;
     let delta = 0.01;
-    if (this.lr) {
-    } else if (this.fh) {
-      let fx = fh.x2 - fh.x1;
-      let fy = fh.y2 - fh.y1;
-      let fx2 = fx * fx;
-      let fy2 = fy * fy;
-      let len = Math.sqrt(fx2 + fy2);
-      let mvr = (this.vx * len) / fx;
-      mvr -= fh.force;
-      // info.fs
-      let fs = 1 / (shoe_mass * delta);
-      let maxf = 1 * walk_speed * shoe_walk_speed;
-      let drag =
-        Math.max(Math.min(shoe_walk_drag, max_friction), min_friction) *
-        walk_drag;
-      let slip = fy / len;
-      if (shoe_walk_slant < Math.abs(slip)) {
-        console.log("TODO: slant");
-      } else {
-        mvr = mleft
-          ? mvr < -maxf
-            ? Math.min(-maxf, mvr + drag * fs)
-            : Math.max(-maxf, mvr - shoe_walk_acc * walk_force * fs)
-          : mright
-          ? mvr > maxf
-            ? Math.max(maxf, mvr - drag * fs)
-            : Math.min(maxf, mvr + shoe_walk_acc * walk_force * fs)
-          : mvr < 0
-          ? Math.min(0, mvr + drag * fs)
-          : mvr > 0
-          ? Math.max(0, mvr - drag * fs)
-          : mvr;
-      }
-      mvr += fh.force;
-      this.vx = (mvr * fx) / len;
-      this.vy = (mvr * fy) / len;
-    } else {
-      // TODO: flying
-      let vx = this.vx;
-      let vy = this.vy;
-      let shoefloat = (float_drag_2 / shoe_mass) * delta;
-      vy > 0
-        ? (vy = Math.max(0, vy - shoefloat))
-        : (vy = Math.min(0, vy + shoefloat));
-      this.vy = Math.min(vy + gravity_acc * delta, fall_speed);
-      this.vx = mleft
-        ? vx > -float_drag_2 * float_multiplier
-          ? Math.max(-float_drag_2 * float_multiplier, vx - 2 * shoefloat)
-          : vx
-        : mright
-        ? vx < float_drag_2 * float_multiplier
-          ? Math.min(float_drag_2 * float_multiplier, vx + 2 * shoefloat)
-          : vx
-        : vy < fall_speed
-        ? vx > 0
-          ? Math.max(0, vx - float_coefficient * shoefloat)
-          : Math.min(0, vx + float_coefficient * shoefloat)
-        : vx > 0
-        ? Math.max(0, vx - shoefloat)
-        : Math.min(0, vx + shoefloat);
-    }
+    let vx = this.vx;
+    let vy = this.vy;
+    let shoefloat = (float_drag_2 / shoe_mass) * delta;
+    vy > 0
+      ? (vy = Math.max(0, vy - shoefloat))
+      : (vy = Math.min(0, vy + shoefloat));
+    this.vy = Math.min(vy + gravity_acc * delta, fall_speed);
+    // NOTE: no y movement
+    this.vy = 0;
+    this.vx = mleft
+      ? vx > -float_drag_2 * float_multiplier
+        ? Math.max(-float_drag_2 * float_multiplier, vx - 2 * shoefloat)
+        : vx
+      : mright
+      ? vx < float_drag_2 * float_multiplier
+        ? Math.min(float_drag_2 * float_multiplier, vx + 2 * shoefloat)
+        : vx
+      : vy < fall_speed
+      ? vx > 0
+        ? Math.max(0, vx - float_coefficient * shoefloat)
+        : Math.min(0, vx + float_coefficient * shoefloat)
+      : vx > 0
+      ? Math.max(0, vx - shoefloat)
+      : Math.min(0, vx + shoefloat);
     while (delta > epsilon) {
       let vx = this.vx;
       let vy = this.vy;
       let x = this.x;
       let y = this.y;
-      fh = this.fh;
-      if (fh) {
-        let nx = x + vx * delta,
-          ny = y + vy * delta;
-        if (nx > fh.x2) {
-          if (!fh.next) {
-            nx = fh.x2 + epsilon;
-            ny = fh.y2;
-            this.fh = null;
-            delta *= 1 - (nx - x) / (vx * delta);
-            // TODO: foothold.next?
-          } else if (fh.next.x1 < fh.next.x2) {
-            this.fh = fh.next;
-            let fx = fh.x2 - fh.x1,
-              fy = fh.y2 - fh.y1;
-            let dot = (vx * fx + vy * fy) / (fx * fx + fy * fy);
-            nx = fh.x1;
-            ny = fh.y1;
-            delta *= 1 - (nx - x) / (vx * delta);
-            this.vx = dot * fx;
-            this.vy = dot * fy;
-          } else if (fh.next.y1 > fh.next.y2) {
-            nx = fh.x2 - epsilon;
-            ny = fh.y2;
-            this.vx = 0;
-            this.vy = 0;
-            delta = 0;
-          } else {
-            (nx = fh.x2 + epsilon), (ny = fh.y2);
-            this.fh = null;
-            delta *= 1 - (nx - x) / (vx * delta);
-          }
-        } else if (nx < fh.x1) {
-          if (!fh.prev) {
-            (nx = fh.x1 - epsilon), (ny = fh.y1);
-            this.fh = null;
-            delta *= 1 - (nx - x) / (vx * delta);
-          } else if (fh.prev.x1 < fh.prev.x2) {
-            this.fh = fh.prev;
-            let fx = fh.x2 - fh.x1,
-              fy = fh.y2 - fh.y1;
-            let dot = (vx * fx + vy * fy) / (fx * fx + fy * fy);
-            (nx = fh.x2), (ny = fh.y2);
-            delta *= 1 - (nx - x) / (vx * delta);
-            this.vx = dot * fx;
-            this.vy = dot * fy;
-          } else if (fh.prev.y1 < fh.prev.y2) {
-            (nx = fh.x1 + epsilon), (ny = fh.y1);
-            this.vx = 0;
-            this.vy = 0;
-            delta = 0;
-          } else {
-            (nx = fh.x1 - epsilon), (ny = fh.y1);
-            this.fh = null;
-            delta *= 1 - (nx - x) / (vx * delta);
-          }
-        } else {
-          delta = 0;
-        }
-        this.x = nx;
-        this.y = ny;
-      } else {
-        let dx1 = vx * delta;
-        let dy1 = vy * delta;
-        let distance = 1;
-        let nnx = x + dx1;
-        let nny = y + dy1;
-        for (let f of MapleMap.footholds || []) {
-          let dx2 = f.x2 - f.x1,
-            dy2 = f.y2 - f.y1;
-          let dx3 = x - f.x1,
-            dy3 = y - f.y1;
-          let denom = dx1 * dy2 - dy1 * dx2;
-          let n1 = (dx1 * dy3 - dy1 * dx3) / denom;
-          let n2 = (dx2 * dy3 - dy2 * dx3) / denom;
-          if (
-            n1 >= 0 &&
-            n1 <= 1 &&
-            n2 >= 0 &&
-            denom < 0 &&
-            f != this.djump &&
-            n2 <= distance
-          )
-            if (
-              this.group == f.group ||
-              dx2 > 0 ||
-              f.group == 0 ||
-              f.cantThrough
-            ) {
-              nnx = this.x + n2 * dx1;
-              nny = this.y + n2 * dy1;
-              distance = n2;
-              this.fh = f;
-            }
-        }
-        this.x = nnx;
-        this.y = nny;
-        x = this.x;
-        y = this.y;
-        fh = this.fh;
-        if (fh) {
-          this.djump = null;
-          let fx = fh.x2 - fh.x1,
-            fy = fh.y2 - fh.y1;
-          if (fh.x1 > fh.x2) {
-            y += epsilon;
-            this.fh = null;
-          } else if (fh.x1 == fh.x2) {
-            if (fy > 0) x += epsilon;
-            else x -= epsilon;
-            this.fh = null;
-          } else {
-            this.group = fh.group;
-            this.layer = fh.layer;
-            if (this.vy > max_land_speed) {
-              this.vy = max_land_speed;
-            }
-          }
-          let dot = (vx * fx + vy * fy) / (fx * fx + fy * fy);
-          this.vx = dot * fx;
-          this.vy = dot * fy;
-          delta *= 1 - distance;
-        } else {
-          delta = 0;
-        }
-      }
+      let dx1 = vx * delta;
+      let dy1 = vy * delta;
+      let nnx = x + dx1;
+      let nny = y + dy1;
+      this.x = nnx;
+      this.y = nny;
+      delta = 0;
     }
   }
 }
