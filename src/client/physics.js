@@ -132,71 +132,123 @@ class Physics {
       let y = this.y;
       fh = this.fh;
 
-      let dx1 = vx * delta;
-      let dy1 = vy * delta;
-      let distance = 1;
-      let nnx = x + dx1;
-      let nny = y + dy1;
-
-      console.log(fh);
-      console.log(delta);
-
-      for (let f of Object.values(MapleMap.footholds || {})) {
-        let dx2 = f.x2 - f.x1,
-          dy2 = f.y2 - f.y1;
-        let dx3 = x - f.x1,
-          dy3 = y - f.y1;
-        let denom = dx1 * dy2 - dy1 * dx2;
-        let n1 = (dx1 * dy3 - dy1 * dx3) / denom;
-        let n2 = (dx2 * dy3 - dy2 * dx3) / denom;
-        if (
-          n1 >= 0 &&
-          n1 <= 1 &&
-          n2 >= 0 &&
-          denom < 0 &&
-          f != this.djump &&
-          n2 <= distance
-        )
-          if (
-            this.group == f.group ||
-            dx2 > 0 ||
-            f.group == 0 ||
-            f.cantThrough
-          ) {
-            nnx = x + n2 * dx1;
-            nny = y + n2 * dy1;
-            distance = n2;
-            fh = f;
-          }
-      }
-
-      x = nnx;
-      y = nny;
       if (fh) {
-        this.djump = null;
-        let fx = fh.x2 - fh.x1,
-          fy = fh.y2 - fh.y1;
-        if (fh.x1 > fh.x2) {
-          y += epsilon;
-          fh = null;
-        } else if (fh.x1 == fh.x2) {
-          if (fy > 0) x += epsilon;
-          else x -= epsilon;
-          fh = null;
+        let nx = x + vx * delta,
+          ny = y + vy * delta;
+        if (nx > fh.x2) {
+          if (!fh.next) {
+            (nx = fh.x2 + epsilon), (ny = fh.y2);
+            fh = null;
+            delta *= 1 - (nx - x) / (vx * delta);
+          } else if (fh.next.x1 < fh.next.x2) {
+            fh = fh.next;
+            let fx = fh.x2 - fh.x1,
+              fy = fh.y2 - fh.y1;
+            let dot = (vx * fx + vy * fy) / (fx * fx + fy * fy);
+            (nx = fh.x1), (ny = fh.y1);
+            delta *= 1 - (nx - x) / (vx * delta);
+            (vx = dot * fx), (vy = dot * fy);
+          } else if (fh.next.y1 > fh.next.y2) {
+            (nx = fh.x2 - epsilon), (ny = fh.y2);
+            (vx = 0), (vy = 0);
+            delta = 0;
+          } else {
+            (nx = fh.x2 + epsilon), (ny = fh.y2);
+            fh = null;
+            delta *= 1 - (nx - x) / (vx * delta);
+          }
+        } else if (nx < fh.x1) {
+          if (!fh.prev) {
+            (nx = fh.x1 - epsilon), (ny = fh.y1);
+            fh = null;
+            delta *= 1 - (nx - x) / (vx * delta);
+          } else if (fh.prev.x1 < fh.prev.x2) {
+            fh = fh.prev;
+            let fx = fh.x2 - fh.x1,
+              fy = fh.y2 - fh.y1;
+            let dot = (vx * fx + vy * fy) / (fx * fx + fy * fy);
+            (nx = fh.x2), (ny = fh.y2);
+            delta *= 1 - (nx - x) / (vx * delta);
+            (vx = dot * fx), (vy = dot * fy);
+          } else if (fh.prev.y1 < fh.prev.y2) {
+            (nx = fh.x1 + epsilon), (ny = fh.y1);
+            (vx = 0), (vy = 0);
+            delta = 0;
+          } else {
+            (nx = fh.x1 - epsilon), (ny = fh.y1);
+            fh = null;
+            delta *= 1 - (nx - x) / (vx * delta);
+          }
         } else {
-          this.group = fh.group;
-          this.layer = fh.layer;
-          if (vy > max_land_speed) vy = max_land_speed;
+          delta = 0;
         }
-        let dot = (vx * fx + vy * fy) / (fx * fx + fy * fy);
-        this.vx = dot * fx;
-        this.vy = dot * fy;
-        delta *= 1 - distance;
+        (x = nx), (y = ny);
       } else {
-        delta = 0;
+        let dx1 = vx * delta;
+        let dy1 = vy * delta;
+        let distance = 1;
+        let nnx = x + dx1;
+        let nny = y + dy1;
+
+        for (let f of Object.values(MapleMap.footholds || {})) {
+          let dx2 = f.x2 - f.x1,
+            dy2 = f.y2 - f.y1;
+          let dx3 = x - f.x1,
+            dy3 = y - f.y1;
+          let denom = dx1 * dy2 - dy1 * dx2;
+          let n1 = (dx1 * dy3 - dy1 * dx3) / denom;
+          let n2 = (dx2 * dy3 - dy2 * dx3) / denom;
+          if (
+            n1 >= 0 &&
+            n1 <= 1 &&
+            n2 >= 0 &&
+            denom < 0 &&
+            f != this.djump &&
+            n2 <= distance
+          )
+            if (
+              this.group == f.group ||
+              dx2 > 0 ||
+              f.group == 0 ||
+              f.cantThrough
+            ) {
+              nnx = x + n2 * dx1;
+              nny = y + n2 * dy1;
+              distance = n2;
+              fh = f;
+            }
+        }
+
+        x = nnx;
+        y = nny;
+        if (fh) {
+          this.djump = null;
+          let fx = fh.x2 - fh.x1,
+            fy = fh.y2 - fh.y1;
+          if (fh.x1 > fh.x2) {
+            y += epsilon;
+            fh = null;
+          } else if (fh.x1 == fh.x2) {
+            if (fy > 0) x += epsilon;
+            else x -= epsilon;
+            fh = null;
+          } else {
+            this.group = fh.group;
+            this.layer = fh.layer;
+            if (vy > max_land_speed) vy = max_land_speed;
+          }
+          let dot = (vx * fx + vy * fy) / (fx * fx + fy * fy);
+          this.vx = dot * fx;
+          this.vy = dot * fy;
+          delta *= 1 - distance;
+        } else {
+          delta = 0;
+        }
       }
       this.x = x;
       this.y = y;
+      this.vx = vx;
+      this.vy = vy;
       this.fh = fh;
     }
   }
