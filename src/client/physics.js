@@ -66,8 +66,6 @@ class Physics {
       ? (vy = Math.max(0, vy - shoefloat))
       : (vy = Math.min(0, vy + shoefloat));
     this.vy = Math.min(vy + gravity_acc * delta, fall_speed);
-    // NOTE: no y movement
-    this.vy = 0;
     this.vx = mleft
       ? vx > -float_drag_2 * float_multiplier
         ? Math.max(-float_drag_2 * float_multiplier, vx - 2 * shoefloat)
@@ -88,13 +86,74 @@ class Physics {
       let vy = this.vy;
       let x = this.x;
       let y = this.y;
+      let fh = this.fh;
+
       let dx1 = vx * delta;
       let dy1 = vy * delta;
+      let distance = 1;
       let nnx = x + dx1;
       let nny = y + dy1;
-      this.x = nnx;
-      this.y = nny;
-      delta = 0;
+
+      console.log(fh);
+      console.log(delta);
+
+      for (let f of Object.values(MapleMap.footholds || {})) {
+        let dx2 = f.x2 - f.x1,
+          dy2 = f.y2 - f.y1;
+        let dx3 = x - f.x1,
+          dy3 = y - f.y1;
+        let denom = dx1 * dy2 - dy1 * dx2;
+        let n1 = (dx1 * dy3 - dy1 * dx3) / denom;
+        let n2 = (dx2 * dy3 - dy2 * dx3) / denom;
+        if (
+          n1 >= 0 &&
+          n1 <= 1 &&
+          n2 >= 0 &&
+          denom < 0 &&
+          f != this.djump &&
+          n2 <= distance
+        )
+          if (
+            this.group == f.group ||
+            dx2 > 0 ||
+            f.group == 0 ||
+            f.cantThrough
+          ) {
+            nnx = x + n2 * dx1;
+            nny = y + n2 * dy1;
+            distance = n2;
+            fh = f;
+          }
+      }
+
+      x = nnx;
+      y = nny;
+      if (fh) {
+        this.djump = null;
+        let fx = fh.x2 - fh.x1,
+          fy = fh.y2 - fh.y1;
+        if (fh.x1 > fh.x2) {
+          y += epsilon;
+          fh = null;
+        } else if (fh.x1 == fh.x2) {
+          if (fy > 0) x += epsilon;
+          else x -= epsilon;
+          fh = null;
+        } else {
+          this.group = fh.group;
+          this.layer = fh.layer;
+          if (vy > max_land_speed) vy = max_land_speed;
+        }
+        let dot = (vx * fx + vy * fy) / (fx * fx + fy * fy);
+        this.vx = dot * fx;
+        this.vy = dot * fy;
+        delta *= 1 - distance;
+      } else {
+        delta = 0;
+      }
+      this.x = x;
+      this.y = y;
+      this.fh = fh;
     }
   }
 }
