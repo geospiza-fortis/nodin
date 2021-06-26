@@ -1,5 +1,4 @@
 import MapleMap from "./maplemap";
-import GameCanvas from "./gamecanvas";
 import MyCharacter from "./mycharacter";
 import Camera from "./camera";
 import UIMap from "./uimap";
@@ -24,29 +23,29 @@ MapState.initialize = async function () {
   MyCharacter.pos.y = yMid;
 };
 
-MapState.doUpdate = function (msPerTick) {
+MapState.doUpdate = function (msPerTick, camera, canvas) {
   if (!!MapleMap.doneLoading) {
     MapleMap.update(msPerTick);
 
-    if (GameCanvas.isKeyDown("up")) MyCharacter.pos.up = true;
-    if (GameCanvas.isKeyDown("down")) MyCharacter.pos.down = true;
-    if (GameCanvas.isKeyDown("left")) MyCharacter.pos.left = true;
-    if (GameCanvas.isKeyDown("right")) MyCharacter.pos.right = true;
-    if (GameCanvas.isKeyDown("alt")) MyCharacter.pos.jump();
+    if (canvas.isKeyDown("up")) MyCharacter.pos.up = true;
+    if (canvas.isKeyDown("down")) MyCharacter.pos.down = true;
+    if (canvas.isKeyDown("left")) MyCharacter.pos.left = true;
+    if (canvas.isKeyDown("right")) MyCharacter.pos.right = true;
+    if (canvas.isKeyDown("alt")) MyCharacter.pos.jump();
     MyCharacter.update(msPerTick);
 
     // now unset if the key is not pressed
-    if (!GameCanvas.isKeyDown("up")) MyCharacter.pos.up = false;
-    if (!GameCanvas.isKeyDown("down")) MyCharacter.pos.down = false;
-    if (!GameCanvas.isKeyDown("left")) MyCharacter.pos.left = false;
-    if (!GameCanvas.isKeyDown("right")) MyCharacter.pos.right = false;
+    if (!canvas.isKeyDown("up")) MyCharacter.pos.up = false;
+    if (!canvas.isKeyDown("down")) MyCharacter.pos.down = false;
+    if (!canvas.isKeyDown("left")) MyCharacter.pos.left = false;
+    if (!canvas.isKeyDown("right")) MyCharacter.pos.right = false;
 
     let x = Camera.x + 400;
     let y = Camera.y + 300;
     //Camera.lookAt(x, y);
     Camera.lookAt(MyCharacter.pos.x, MyCharacter.pos.y - 78);
 
-    UIMap.doUpdate(msPerTick);
+    UIMap.doUpdate(msPerTick, camera, canvas);
   }
 };
 

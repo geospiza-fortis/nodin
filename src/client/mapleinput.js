@@ -1,7 +1,5 @@
-import GameCanvas from "./gamecanvas";
-
 class MapleInput {
-  constructor(opts) {
+  constructor(canvas, opts) {
     const x = opts.x || 0;
     const y = opts.y || 0;
     const width = opts.width || 150;
@@ -21,13 +19,13 @@ class MapleInput {
     this.input = input;
     this.focusListeners = [
       () => {
-        GameCanvas.focusInput = true;
+        canvas.focusInput = true;
       },
       ...focusListeners,
     ];
     this.focusoutListeners = [
       () => {
-        GameCanvas.focusInput = false;
+        canvas.focusInput = false;
       },
       ...focusoutListeners,
     ];
@@ -51,14 +49,14 @@ class MapleInput {
       this.focusoutListeners.forEach((listener) => listener());
     });
     input.addEventListener("keydown", (e) => {
-      if (e.keyCode === GameCanvas.keys.enter) {
+      if (e.keyCode === canvas.keys.enter) {
         e.preventDefault();
         e.stopPropagation();
         this.submitListeners.forEach((listener) => listener());
       }
     });
 
-    GameCanvas.gameWrapper.appendChild(input);
+    canvas.gameWrapper.appendChild(input);
   }
   addFocusListener(listener) {
     this.focusListeners.push(listener);
