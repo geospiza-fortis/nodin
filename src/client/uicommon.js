@@ -1,4 +1,3 @@
-import { DRAW_IMAGE } from "./draw";
 import GameCanvas from "./gamecanvas";
 import WZManager from "./wzmanager";
 import PLAY_AUDIO from "./playaudio";
