@@ -1,5 +1,4 @@
 import WZManager from "./wzmanager";
-import { DRAW_IMAGE, DRAW_TEXT, DRAW_RECT, MEASURE_TEXT } from "./draw";
 import Random from "./random";
 
 class NPC {
@@ -133,7 +132,7 @@ class NPC {
     }
     this.updateTvAd(msPerTick);
   }
-  draw(camera, lag, msPerTick, tdelta) {
+  draw(canvas, camera, lag, msPerTick, tdelta) {
     const currentFrame = this.stances[this.stance].frames[this.frame];
     const currentImage = currentFrame.nGetImage();
 
@@ -142,17 +141,17 @@ class NPC {
 
     const adjustX = !this.flipped ? originX : currentFrame.nWidth - originX;
 
-    DRAW_IMAGE({
+    canvas.drawImage({
       img: currentImage,
       dx: this.x - camera.x - adjustX,
       dy: this.cy - camera.y - originY,
       flipped: !!this.flipped,
     });
 
-    this.drawName(camera, lag, msPerTick, tdelta);
-    this.drawTvAd(camera, lag, msPerTick, tdelta);
+    this.drawName(canvas, camera, lag, msPerTick, tdelta);
+    this.drawTvAd(canvas, camera, lag, msPerTick, tdelta);
   }
-  drawName(camera, lag, msPerTick, tdelta) {
+  drawName(canvas, camera, lag, msPerTick, tdelta) {
     const hideName = this.npcFile.info.nGet("hideName").nGet("nValue", 0);
     const hasName = !!this.strings.name;
     const hasFunc = !!this.strings.func;
@@ -171,9 +170,11 @@ class NPC {
         fontWeight: "bold",
         align: "center",
       };
-      const nameWidth = Math.ceil(MEASURE_TEXT(nameOpts).width + tagPadding);
+      const nameWidth = Math.ceil(
+        canvas.measureText(nameOpts).width + tagPadding
+      );
       const nameTagX = Math.ceil(this.x - camera.x - nameWidth / 2);
-      DRAW_RECT({
+      canvas.drawRect({
         x: nameTagX,
         y: this.cy - camera.y + offsetFromCy,
         width: nameWidth,
@@ -181,7 +182,7 @@ class NPC {
         color: tagColor,
         alpha: tagAlpha,
       });
-      DRAW_TEXT(nameOpts);
+      canvas.drawText(nameOpts);
     }
     if (!hideName && hasFunc) {
       const funcOpts = {
@@ -192,9 +193,11 @@ class NPC {
         fontWeight: "bold",
         align: "center",
       };
-      const funcWidth = Math.ceil(MEASURE_TEXT(funcOpts).width + tagPadding);
+      const funcWidth = Math.ceil(
+        canvas.measureText(funcOpts).width + tagPadding
+      );
       const funcTagX = Math.ceil(this.x - camera.x - funcWidth / 2);
-      DRAW_RECT({
+      canvas.drawRect({
         x: funcTagX,
         y: this.cy - camera.y + offsetFromCy + tagHeight + 1,
         width: funcWidth,
@@ -202,10 +205,10 @@ class NPC {
         color: tagColor,
         alpha: tagAlpha,
       });
-      DRAW_TEXT(funcOpts);
+      canvas.drawText(funcOpts);
     }
   }
-  drawTvAd(camera, lag, msPerTick, tdelta) {
+  drawTvAd(canvas, camera, lag, msPerTick, tdelta) {
     if (!this.mapleTv) {
       return;
     }
@@ -215,13 +218,13 @@ class NPC {
     const currentFrame = this.tvAdStances[s].frames[f];
     const currentImage = currentFrame.nGetImage();
 
-    DRAW_IMAGE({
+    canvas.drawImage({
       img: currentImage,
       dx: this.x - camera.x + this.mapleTvAdX,
       dy: this.cy - camera.y + this.mapleTvAdY,
     });
 
-    DRAW_IMAGE({
+    canvas.drawImage({
       img: this.mapleTvMsgImg,
       dx: this.x - camera.x + ((this.mapleTvMsgX - 0x10000) % 0x10000),
       dy: this.cy - camera.y + this.mapleTvMsgY,

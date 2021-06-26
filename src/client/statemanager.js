@@ -18,9 +18,9 @@ StateManager.doUpdate = function (msPerTick, camera) {
   }
 };
 
-StateManager.doRender = function (camera, lag, msPerTick, tdelta) {
+StateManager.doRender = function (canvas, camera, lag, msPerTick, tdelta) {
   if (!this.transitioning) {
-    this.currentState.doRender(camera, lag, msPerTick, tdelta);
+    this.currentState.doRender(canvas, camera, lag, msPerTick, tdelta);
   }
 };
 

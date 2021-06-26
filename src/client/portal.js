@@ -1,5 +1,4 @@
 import WZManager from "./wzmanager";
-import { DRAW_IMAGE } from "./draw";
 
 class Portal {
   static async fromWzNode(wzNode) {
@@ -115,7 +114,7 @@ class Portal {
       this.setFrame(this.frame + 1, this.delay - this.nextDelay);
     }
   }
-  draw(camera, lag, msPerTick, tdelta) {
+  draw(canvas, camera, lag, msPerTick, tdelta) {
     if (!this.frames) {
       return;
     }
@@ -126,7 +125,7 @@ class Portal {
     const originX = currentFrame.nGet("origin").nGet("nX", 0);
     const originY = currentFrame.nGet("origin").nGet("nY", 0);
 
-    DRAW_IMAGE({
+    canvas.drawImage({
       img: currentImage,
       dx: this.x - camera.x - originX,
       dy: this.y - camera.y - originY,

@@ -1,5 +1,4 @@
 import WZManager from "./wzmanager";
-import { DRAW_IMAGE } from "./draw";
 
 class Tile {
   static async fromWzNode(wzNode) {
@@ -27,8 +26,8 @@ class Tile {
     this.y = wzNode.y.nValue;
     this.z = spriteNode.nGet("z").nGet("nValue", 0) || wzNode.zM.nValue;
   }
-  draw(camera, lag, msPerTick) {
-    DRAW_IMAGE({
+  draw(canvas, camera, lag, msPerTick) {
+    canvas.drawImage({
       img: this.img,
       dx: this.x - camera.x - this.originX,
       dy: this.y - camera.y - this.originY,

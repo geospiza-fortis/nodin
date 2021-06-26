@@ -1,5 +1,4 @@
 import WZManager from "./wzmanager";
-import { DRAW_IMAGE, DRAW_TEXT, DRAW_RECT, MEASURE_TEXT } from "./draw";
 import PLAY_AUDIO from "./playaudio";
 import { Physics } from "./physics";
 
@@ -377,7 +376,7 @@ class MapleCharacter {
 
     return drawableFrames;
   }
-  draw(camera, lag, msPerTick, tdelta) {
+  draw(canvas, camera, lag, msPerTick, tdelta) {
     // set whether the character is flipped prior to drawing
     if (this.pos.right && !this.pos.left) {
       this.flipped = true;
@@ -412,7 +411,7 @@ class MapleCharacter {
     const angle = !characterIsFlipped ? rotate : 360 - rotate;
 
     drawableFrames.forEach((frame) => {
-      DRAW_IMAGE({
+      canvas.drawImage({
         img: frame.img,
         dx: Math.floor(this.pos.x + frame.x - camera.x + moveX),
         dy: Math.floor(this.pos.y + frame.y - camera.y + moveY),
@@ -423,9 +422,9 @@ class MapleCharacter {
       });
     });
 
-    this.drawName(camera, lag, msPerTick, tdelta);
+    this.drawName(canvas, camera, lag, msPerTick, tdelta);
   }
-  drawName(camera, lag, msPerTick, tdelta) {
+  drawName(canvas, camera, lag, msPerTick, tdelta) {
     const tagHeight = 16;
     const tagPadding = 4;
     const tagColor = "#000000";
@@ -438,9 +437,11 @@ class MapleCharacter {
       color: "#ffffff",
       align: "center",
     };
-    const nameWidth = Math.ceil(MEASURE_TEXT(nameOpts).width + tagPadding);
+    const nameWidth = Math.ceil(
+      canvas.measureText(nameOpts).width + tagPadding
+    );
     const nameTagX = Math.round(this.pos.x - camera.x - nameWidth / 2);
-    DRAW_RECT({
+    canvas.drawRect({
       x: nameTagX,
       y: Math.floor(this.pos.y - camera.y + offsetFromY),
       width: nameWidth,
@@ -448,7 +449,7 @@ class MapleCharacter {
       color: tagColor,
       alpha: tagAlpha,
     });
-    DRAW_TEXT(nameOpts);
+    canvas.drawText(nameOpts);
   }
 }
 

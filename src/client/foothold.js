@@ -1,5 +1,3 @@
-import { DRAW_LINE } from "./draw";
-
 class Foothold {
   static fromWzNode(wzNode) {
     const fh = new Foothold(wzNode);
@@ -33,8 +31,8 @@ class Foothold {
       this.isRightWall = this.y1 >= this.y2;
     }
   }
-  draw(camera, lag, msPerTick) {
-    DRAW_LINE({
+  draw(canvas, camera, lag, msPerTick) {
+    canvas.drawLine({
       x1: this.x1 - camera.x,
       x2: this.x2 - camera.x,
       y1: this.y1 - camera.y,

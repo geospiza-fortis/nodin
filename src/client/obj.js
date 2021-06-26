@@ -1,5 +1,4 @@
 import WZManager from "./wzmanager";
-import { DRAW_IMAGE } from "./draw";
 
 class Obj {
   static async fromWzNode(wzNode) {
@@ -69,7 +68,7 @@ class Obj {
       this.advanceFrame();
     }
   }
-  draw(camera, lag, msPerTick, tdelta) {
+  draw(canvas, camera, lag, msPerTick, tdelta) {
     const firstFrame = this.frames[0];
     const currentFrame = this.frames[this.frame];
     const currentImage = currentFrame.nGetImage();
@@ -141,7 +140,7 @@ class Obj {
       xEnd += 800;
 
       for (dx = Math.floor(xBegin); dx <= xEnd; dx += cx) {
-        DRAW_IMAGE({
+        canvas.drawImage({
           img: currentImage,
           flipped: !!this.flipped,
           dy: dy - camera.y,
@@ -170,7 +169,7 @@ class Obj {
       yEnd += 600;
 
       for (dy = Math.floor(yBegin); dy <= yEnd; dy += cy) {
-        DRAW_IMAGE({
+        canvas.drawImage({
           img: currentImage,
           flipped: !!this.flipped,
           dx: dx - camera.x,
@@ -180,7 +179,7 @@ class Obj {
         });
       }
     } else {
-      DRAW_IMAGE({
+      canvas.drawImage({
         img: currentImage,
         dx: dx - camera.x,
         dy: dy - camera.y,

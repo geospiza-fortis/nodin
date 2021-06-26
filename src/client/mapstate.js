@@ -50,16 +50,16 @@ MapState.doUpdate = function (msPerTick) {
   }
 };
 
-MapState.doRender = function (camera, lag, msPerTick, tdelta) {
+MapState.doRender = function (canvas, camera, lag, msPerTick, tdelta) {
   if (!!MapleMap.doneLoading) {
-    MapleMap.render(camera, lag, msPerTick, tdelta);
+    MapleMap.render(canvas, camera, lag, msPerTick, tdelta);
     if (!!MyCharacter.active) {
-      MyCharacter.draw(camera, lag, msPerTick, tdelta);
+      MyCharacter.draw(canvas, camera, lag, msPerTick, tdelta);
     }
     if (!!MyCharacter.levelingUp) {
       drawLevelUp(MyCharacter);
     }
-    UIMap.doRender(camera, lag, msPerTick, tdelta);
+    UIMap.doRender(canvas, camera, lag, msPerTick, tdelta);
   }
 };
 

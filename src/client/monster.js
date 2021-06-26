@@ -1,6 +1,5 @@
 import WZManager from "./wzmanager";
 import PLAY_AUDIO from "./playaudio";
-import { DRAW_IMAGE } from "./draw";
 
 class Monster {
   static async fromOpts(opts) {
@@ -111,7 +110,7 @@ class Monster {
       this.setFrame(this.stance, this.frame + 1, this.delay - this.nextDelay);
     }
   }
-  draw(camera, lag, msPerTick, tdelta) {
+  draw(canvas, camera, lag, msPerTick, tdelta) {
     const currentFrame = this.stances[this.stance].frames[this.frame];
     const currentImage = currentFrame.nGetImage();
 
@@ -120,7 +119,7 @@ class Monster {
 
     const adjustX = !this.flipped ? originX : currentFrame.nWidth - originX;
 
-    DRAW_IMAGE({
+    canvas.drawImage({
       img: currentImage,
       dx: this.x - camera.x - adjustX,
       dy: this.y - camera.y - originY,

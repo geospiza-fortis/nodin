@@ -1,4 +1,3 @@
-import { DRAW_IMAGE, DRAW_TEXT } from "./draw";
 import GameCanvas from "./gamecanvas";
 import WZManager from "./wzmanager";
 import UICommon from "./uicommon";
@@ -42,10 +41,10 @@ UILogin.initialize = async function () {
       return stances;
     }, {}),
     update: (msPerTick) => {},
-    draw: (camera, lag, msPerTick, tdelta) => {
+    draw: (canvas, camera, lag, msPerTick, tdelta) => {
       const currentFrame = this.loginButton.stances[this.loginButton.stance];
       const currentImage = currentFrame.nGetImage();
-      DRAW_IMAGE({
+      canvas.drawImage({
         img: currentImage,
         dx: this.loginButtonX - camera.x,
         dy: this.loginButtonY - camera.y,
@@ -170,29 +169,29 @@ UILogin.doUpdate = function (msPerTick, camera) {
   UICommon.doUpdate(msPerTick);
 };
 
-UILogin.doRender = function (camera, lag, msPerTick, tdelta) {
+UILogin.doRender = function (canvas, camera, lag, msPerTick, tdelta) {
   const currDiceFrame = this.dice[this.diceFrame];
   const currDiceImage = currDiceFrame.nGetImage();
-  DRAW_IMAGE({
+  canvas.drawImage({
     img: currDiceImage,
     dx: this.diceX - camera.x - currDiceFrame.origin.nX,
     dy: this.diceY - camera.y - currDiceFrame.origin.nY,
   });
 
-  DRAW_IMAGE({
+  canvas.drawImage({
     img: this.frameImg,
     dx: 0,
     dy: 0,
   });
 
-  DRAW_TEXT({
+  canvas.drawText({
     text: "Ver. 0.62",
     fontWeight: "bold",
     x: 595,
     y: 13,
   });
 
-  UICommon.doRender(camera, lag, msPerTick, tdelta);
+  UICommon.doRender(canvas, camera, lag, msPerTick, tdelta);
 };
 
 UILogin.removeInputs = function () {
