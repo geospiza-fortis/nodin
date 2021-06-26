@@ -1,9 +1,23 @@
-import REQUEST_ANIMATION_FRAME from "./raf";
 import { DRAW_RECT } from "./draw";
 import Timer from "./timer";
 import GameCanvas from "./gamecanvas";
 import Camera from "./camera";
 import StateManager from "./statemanager";
+
+const REQUEST_ANIMATION_FRAME = (() => {
+  return (
+    window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    function (callback) {
+      setTimeout(() => {
+        callback && callback();
+      }, 1000 / 60);
+    }
+  );
+})();
 
 const GameLoop = {
   fps: 60,
