@@ -1,5 +1,4 @@
 import WZManager from "./wzmanager";
-import { DRAW_IMAGE } from "./draw";
 
 import Background from "./background";
 import Foothold from "./foothold";
@@ -257,12 +256,12 @@ MapleMap.update = function (msPerTick) {
   this.portals.forEach((p) => p.update(msPerTick));
 };
 
-MapleMap.render = function (camera, lag, msPerTick, tdelta) {
+MapleMap.render = function (canvas, camera, lag, msPerTick, tdelta) {
   if (!this.doneLoading) {
     return;
   }
 
-  const draw = (obj) => obj.draw(camera, lag, msPerTick, tdelta);
+  const draw = (obj) => obj.draw(canvas, camera, lag, msPerTick, tdelta);
 
   this.backgrounds.filter((bg) => !bg.front).forEach(draw);
 
@@ -289,7 +288,7 @@ MapleMap.render = function (camera, lag, msPerTick, tdelta) {
   // draw levelup
   const drawLevelUp = (c) => {
     const levelUpFrame = c.levelUpFrames[c.levelUpFrame];
-    DRAW_IMAGE({
+    canvas.drawImage({
       img: levelUpFrame.nGetImage(),
       dx: c.x - levelUpFrame.origin.nX - camera.x,
       dy: c.y - levelUpFrame.origin.nY - camera.y,

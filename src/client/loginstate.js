@@ -23,10 +23,10 @@ LoginState.doUpdate = function (msPerTick, camera) {
   }
 };
 
-LoginState.doRender = function (camera, lag, msPerTick, tdelta) {
+LoginState.doRender = function (canvas, camera, lag, msPerTick, tdelta) {
   if (!!MapleMap.doneLoading) {
-    MapleMap.render(camera, lag, msPerTick, tdelta);
-    UILogin.doRender(camera, lag, msPerTick, tdelta);
+    MapleMap.render(canvas, camera, lag, msPerTick, tdelta);
+    UILogin.doRender(canvas, camera, lag, msPerTick, tdelta);
   }
 };
 

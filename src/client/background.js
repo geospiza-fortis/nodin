@@ -1,5 +1,4 @@
 import WZManager from "./wzmanager";
-import { DRAW_IMAGE } from "./draw";
 
 class Background {
   static async fromWzNode(wzNode) {
@@ -103,7 +102,7 @@ class Background {
       this.setFrame(this.frame + 1, this.delay - this.nextDelay);
     }
   }
-  draw(camera, lag, msPerTick, tdelta) {
+  draw(canvas, camera, lag, msPerTick, tdelta) {
     const firstFrame = this.frames[0];
     const currentFrame = this.frames[this.frame];
     const currentImage = currentFrame.nGetImage();
@@ -209,7 +208,7 @@ class Background {
 
     for (dx = Math.floor(xBegin); dx <= xEnd; dx += cx) {
       for (dy = Math.floor(yBegin); dy <= yEnd; dy += cy) {
-        DRAW_IMAGE({
+        canvas.drawImage({
           img: currentImage,
           flipped: !!this.flipped,
           alpha,

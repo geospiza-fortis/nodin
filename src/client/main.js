@@ -1,5 +1,4 @@
 import GameLoop from "./gameloop";
-import { DRAW_RECT } from "./draw";
 import Timer from "./timer";
 import GameCanvas from "./gamecanvas";
 import WZManager from "./wzmanager";
@@ -9,9 +8,16 @@ import StateManager from "./statemanager";
 import LoginState from "./loginstate";
 
 async function startGame() {
-  DRAW_RECT({ x: 0, y: 0, width: 800, height: 600, color: "#000000" });
-  StateManager.initialize();
   GameCanvas.initialize();
+  GameCanvas.drawRect({
+    x: 0,
+    y: 0,
+    width: 800,
+    height: 600,
+    color: "#000000",
+  });
+
+  StateManager.initialize();
   WZManager.initialize();
   Camera.initialize();
   Timer.initialize();

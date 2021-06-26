@@ -1,4 +1,3 @@
-import { DRAW_RECT } from "./draw";
 import Timer from "./timer";
 import GameCanvas from "./gamecanvas";
 import Camera from "./camera";
@@ -29,9 +28,9 @@ GameLoop.doUpdate = function (msPerTick, camera) {
   StateManager.doUpdate(msPerTick, camera);
 };
 
-GameLoop.doRender = function (camera, lag, msPerTick, tdelta) {
-  DRAW_RECT({ x: 0, y: 0, width: 800, height: 600, color: "#000000" });
-  StateManager.doRender(camera, lag, msPerTick, tdelta);
+GameLoop.doRender = function (canvas, camera, lag, msPerTick, tdelta) {
+  canvas.drawRect({ x: 0, y: 0, width: 800, height: 600, color: "#000000" });
+  StateManager.doRender(canvas, camera, lag, msPerTick, tdelta);
 };
 
 GameLoop.postRender = function () {
@@ -48,7 +47,13 @@ GameLoop.gameLoop = function (highResTimestamp) {
     Timer.tdelta += GameLoop.msPerTick;
     GameLoop.doUpdate(GameLoop.msPerTick, Camera);
   }
-  GameLoop.doRender(Camera, GameLoop.lag, GameLoop.msPerTick, Timer.tdelta);
+  GameLoop.doRender(
+    GameCanvas,
+    Camera,
+    GameLoop.lag,
+    GameLoop.msPerTick,
+    Timer.tdelta
+  );
   GameLoop.postRender();
 };
 

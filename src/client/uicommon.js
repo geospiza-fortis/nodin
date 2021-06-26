@@ -29,7 +29,7 @@ UICommon.playMouseHoverAudio = function () {
 
 UICommon.doUpdate = function (msPerTick) {};
 
-UICommon.doRender = function (camera, lag, msPerTick, tdelta) {
+UICommon.doRender = function (canvas, camera, lag, msPerTick, tdelta) {
   const clicked = GameCanvas.clicked;
   const cursorImg = !clicked ? this.cursorImg : this.cursorDownImg;
   const cursorOrigin = !clicked ? this.cursorOrigin : this.cursorDownOrigin;
