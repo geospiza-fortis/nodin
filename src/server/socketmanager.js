@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
 /**
  * Module dependencies.
  * @private
  */
-const socketIo = require('socket.io');
-const MapleClient = require('./mapleclient').MapleClient;
+const socketIo = require("socket.io");
+const MapleClient = require("./mapleclient").MapleClient;
 
 /**
  * Module exports.
@@ -30,7 +30,7 @@ const handlers = {
  */
 function initialize(httpServer) {
   const io = socketIo(httpServer);
-  io.on('connection', socket => {
+  io.on("connection", (socket) => {
     handleNewConnection(socket);
 
     Object.entries(handlers).forEach(([eventKey, handlerFunction]) => {

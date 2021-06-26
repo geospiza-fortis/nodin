@@ -1,30 +1,44 @@
-import REQUEST_ANIMATION_FRAME from './raf';
-import DRAW_RECT from './drawrect';
-import Timer from './timer';
-import GameCanvas from './gamecanvas';
-import Camera from './camera';
-import StateManager from './statemanager';
+import { DRAW_RECT } from "./draw";
+import Timer from "./timer";
+import GameCanvas from "./gamecanvas";
+import Camera from "./camera";
+import StateManager from "./statemanager";
+
+const REQUEST_ANIMATION_FRAME = (() => {
+  return (
+    window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    function (callback) {
+      setTimeout(() => {
+        callback && callback();
+      }, 1000 / 60);
+    }
+  );
+})();
 
 const GameLoop = {
   fps: 60,
-  msPerTick: 1000/60,
+  msPerTick: 1000 / 60,
   lag: 0,
 };
 
-GameLoop.doUpdate = function(msPerTick, camera) {
+GameLoop.doUpdate = function (msPerTick, camera) {
   StateManager.doUpdate(msPerTick, camera);
 };
 
-GameLoop.doRender = function(camera, lag, msPerTick, tdelta) {
-  DRAW_RECT({ x: 0, y: 0, width: 800, height: 600, color: '#000000', });
+GameLoop.doRender = function (camera, lag, msPerTick, tdelta) {
+  DRAW_RECT({ x: 0, y: 0, width: 800, height: 600, color: "#000000" });
   StateManager.doRender(camera, lag, msPerTick, tdelta);
 };
 
-GameLoop.postRender = function() {
+GameLoop.postRender = function () {
   GameCanvas.resetMousewheel();
 };
 
-GameLoop.gameLoop = function(highResTimestamp) {
+GameLoop.gameLoop = function (highResTimestamp) {
   REQUEST_ANIMATION_FRAME(GameLoop.gameLoop);
 
   Timer.update();

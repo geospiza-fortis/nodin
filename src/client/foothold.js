@@ -1,4 +1,4 @@
-import DRAW_LINE from './drawline';
+import { DRAW_LINE } from "./draw";
 
 class Foothold {
   static fromWzNode(wzNode) {
@@ -21,11 +21,12 @@ class Foothold {
     this.y2 = wzNode.y2.nValue;
     this.prev = wzNode.prev.nValue;
     this.next = wzNode.next.nValue;
-    this.force = wzNode.nGet('force').nGet('nValue', 0);
-    this.forbid = wzNode.nGet('forbidFallDown').nGet('nValue', 0);
+    this.force = wzNode.nGet("force").nGet("nValue", 0);
+    this.forbid = wzNode.nGet("forbidFallDown").nGet("nValue", 0);
+    this.cantThrough = wzNode.nGet("cantThrough").nGet("nValue", 0);
 
     this.isWall = this.x1 === this.x2;
-    this.slope = !this.isWall ? ((this.y2-this.y1)/(this.x2-this.x1)) : 0;
+    this.slope = !this.isWall ? (this.y2 - this.y1) / (this.x2 - this.x1) : 0;
     this.isCeiling = this.x1 > this.x2;
     if (this.isWall) {
       this.isLeftWall = this.y1 < this.y2;
@@ -34,11 +35,11 @@ class Foothold {
   }
   draw(camera, lag, msPerTick) {
     DRAW_LINE({
-      x1: this.x1-camera.x,
-      x2: this.x2-camera.x,
-      y1: this.y1-camera.y,
-      y2: this.y2-camera.y,
-      color: '#00ff00',
+      x1: this.x1 - camera.x,
+      x2: this.x2 - camera.x,
+      y1: this.y1 - camera.y,
+      y2: this.y2 - camera.y,
+      color: "#00ff00",
     });
   }
 }

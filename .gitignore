@@ -1,7 +1,7 @@
 /wz_server/
 /client/wz_client/
 /node_modules/
-/client/bundle.js
+/client/build/
 
 # WebStorm
 /.idea/

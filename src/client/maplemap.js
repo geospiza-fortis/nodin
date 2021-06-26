@@ -1,29 +1,27 @@
-import WZManager from './wzmanager';
-import DRAW_IMAGE from './drawimage';
+import WZManager from "./wzmanager";
+import { DRAW_IMAGE } from "./draw";
 
-import Background from './background';
-import Foothold from './foothold';
-import Portal from './portal';
-import Tile from './tile';
-import Obj from './obj';
-import NPC from './npc';
-import Monster from './monster';
-import MapleCharacter from './maplecharacter';
-import MyCharacter from './mycharacter';
+import Background from "./background";
+import Foothold from "./foothold";
+import Portal from "./portal";
+import Tile from "./tile";
+import Obj from "./obj";
+import NPC from "./npc";
+import Monster from "./monster";
 
-import AudioManager from './audiomanager';
-import Camera from './camera'; //debugging
-import Timer from './timer';
+import AudioManager from "./audiomanager";
+import Camera from "./camera"; //debugging
+import Timer from "./timer";
 
 const MapleMap = {};
 
-MapleMap.load = async function(id) {
+MapleMap.load = async function (id) {
   this.doneLoading = false;
 
-  let filename = 'UI.wz/MapLogin.img';
-  if (id !== 'MapLogin') {
-    const prefix = Math.floor(id/100000000);
-    const strId = `${id}`.padStart(9, '0');
+  let filename = "UI.wz/MapLogin.img";
+  if (id !== "MapLogin") {
+    const prefix = Math.floor(id / 100000000);
+    const strId = `${id}`.padStart(9, "0");
     filename = `Map.wz/Map/Map${prefix}/${strId}.img`;
   }
   this.wzNode = await WZManager.get(filename);
@@ -36,7 +34,7 @@ MapleMap.load = async function(id) {
   this.footholds = this.loadFootholds(this.wzNode.foothold);
   this.boundaries = this.loadBoundaries(this.wzNode, this.footholds);
   Camera.setBoundaries(this.boundaries); //debugging
-  Camera.lookAt(this.boundaries.left, this.boundaries.top);//debugging
+  Camera.lookAt(this.boundaries.left, this.boundaries.top); //debugging
   this.backgrounds = await this.loadBackgrounds(this.wzNode.back);
   this.tiles = await this.loadTiles(this.wzNode);
   this.objects = await this.loadObjects(this.wzNode);
@@ -45,30 +43,25 @@ MapleMap.load = async function(id) {
   await this.loadNPCs(this.wzNode.life);
   await this.loadMonsters(this.wzNode.life);
 
-  const xMid = Math.floor((this.boundaries.right + this.boundaries.left) / 2);
-  const yMid = Math.floor((this.boundaries.bottom + this.boundaries.top) / 2);
-  MyCharacter.x = xMid;
-  MyCharacter.y = yMid;
-
   Timer.doReset();
 
   this.id = id;
   this.doneLoading = true;
 };
 
-MapleMap.loadFootholds = function(wzNode) {
+MapleMap.loadFootholds = function (wzNode) {
   const footholds = {};
 
-  wzNode.nChildren.forEach(layer => {
-    layer.nChildren.forEach(group => {
-      group.nChildren.forEach(fhNode => {
+  wzNode.nChildren.forEach((layer) => {
+    layer.nChildren.forEach((group) => {
+      group.nChildren.forEach((fhNode) => {
         const fh = Foothold.fromWzNode(fhNode);
         footholds[fh.id] = fh;
       });
     });
   });
 
-  Object.values(footholds).forEach(fh => {
+  Object.values(footholds).forEach((fh) => {
     fh.prev = footholds[fh.prev];
     fh.next = footholds[fh.next];
   });
@@ -76,7 +69,7 @@ MapleMap.loadFootholds = function(wzNode) {
   return footholds;
 };
 
-MapleMap.loadBackgrounds = async function(wzNode) {
+MapleMap.loadBackgrounds = async function (wzNode) {
   const backgrounds = [];
 
   for (const backNode of wzNode.nChildren) {
@@ -88,12 +81,12 @@ MapleMap.loadBackgrounds = async function(wzNode) {
     backgrounds.push(bg);
   }
 
-  backgrounds.sort((a, b) => a.z-b.z);
+  backgrounds.sort((a, b) => a.z - b.z);
 
   return backgrounds;
 };
 
-MapleMap.loadPortals = async function(wzNode) {
+MapleMap.loadPortals = async function (wzNode) {
   const portals = [];
 
   for (const portalNode of wzNode.nChildren) {
@@ -104,35 +97,35 @@ MapleMap.loadPortals = async function(wzNode) {
   return portals;
 };
 
-MapleMap.loadNames = async function(id) {
-  const strMap = await WZManager.get('String.wz/Map.img');
+MapleMap.loadNames = async function (id) {
+  const strMap = await WZManager.get("String.wz/Map.img");
 
-  const firstDigit = Math.floor(id/100000000);
-  const firstTwoDigits = Math.floor(id/10000000);
-  const firstThreeDigits = Math.floor(id/1000000);
+  const firstDigit = Math.floor(id / 100000000);
+  const firstTwoDigits = Math.floor(id / 10000000);
+  const firstThreeDigits = Math.floor(id / 1000000);
 
-  let area = 'maple';
+  let area = "maple";
   if (firstTwoDigits === 54) {
-    area = 'singapore';
+    area = "singapore";
   } else if (firstDigit === 9) {
-    area = 'etc';
+    area = "etc";
   } else if (firstDigit === 8) {
-    area = 'jp';
+    area = "jp";
   } else if (firstThreeDigits === 682) {
-    area = 'HalloweenGL';
+    area = "HalloweenGL";
   } else if (firstTwoDigits === 60 || firstTwoDigits === 61) {
-    area = 'MasteriaGL';
+    area = "MasteriaGL";
   } else if (firstTwoDigits === 67 || firstTwoDigits === 68) {
-    area = 'weddingGL';
+    area = "weddingGL";
   } else if (firstDigit === 2) {
-    area = 'ossyria';
+    area = "ossyria";
   } else if (firstDigit === 1) {
-    area = 'victoria';
+    area = "victoria";
   }
 
   const nameNode = strMap.nGet(area).nGet(id);
-  const streetName = nameNode.nGet('streetName').nGet('nValue', '');
-  const mapName = nameNode.nGet('mapName').nGet('nValue', '');
+  const streetName = nameNode.nGet("streetName").nGet("nValue", "");
+  const mapName = nameNode.nGet("mapName").nGet("nValue", "");
 
   return {
     streetName,
@@ -140,7 +133,7 @@ MapleMap.loadNames = async function(id) {
   };
 };
 
-MapleMap.loadTiles = async function(wzNode) {
+MapleMap.loadTiles = async function (wzNode) {
   const tiles = [];
 
   for (let layer = 0; layer <= 7; layer += 1) {
@@ -151,12 +144,12 @@ MapleMap.loadTiles = async function(wzNode) {
     }
   }
 
-  tiles.sort((a, b) => a.z-b.z);
+  tiles.sort((a, b) => a.z - b.z);
 
   return tiles;
 };
 
-MapleMap.loadObjects = async function(wzNode) {
+MapleMap.loadObjects = async function (wzNode) {
   const objects = [];
 
   for (let layer = 0; layer <= 7; layer += 1) {
@@ -167,12 +160,12 @@ MapleMap.loadObjects = async function(wzNode) {
     }
   }
 
-  objects.sort((a, b) => a.z === b.z ? a.zid-b.zid : a.z-b.z);
+  objects.sort((a, b) => (a.z === b.z ? a.zid - b.zid : a.z - b.z));
 
   return objects;
 };
 
-MapleMap.spawnMonster = async function(opts={}) {
+MapleMap.spawnMonster = async function (opts = {}) {
   const mob = await Monster.fromOpts(opts);
   const whichFoothold = this.footholds[mob.fh];
   if (!!whichFoothold) {
@@ -182,20 +175,20 @@ MapleMap.spawnMonster = async function(opts={}) {
   this.monsters.push(mob);
 };
 
-MapleMap.loadMonsters = async function(wzNode) {
-  for (const mobNode of wzNode.nChildren.filter(n => n.type.nValue === 'm')) {
+MapleMap.loadMonsters = async function (wzNode) {
+  for (const mobNode of wzNode.nChildren.filter((n) => n.type.nValue === "m")) {
     await this.spawnMonster({
       oId: null,
       id: mobNode.id.nValue,
       x: mobNode.x.nValue,
       y: mobNode.y.nValue,
-      stance: '',
+      stance: "",
       fh: mobNode.fh.nValue,
     });
   }
 };
 
-MapleMap.spawnNPC = async function(opts={}) {
+MapleMap.spawnNPC = async function (opts = {}) {
   const npc = await NPC.fromOpts(opts);
   const whichFoothold = this.footholds[npc.fh];
   if (!!whichFoothold) {
@@ -205,14 +198,14 @@ MapleMap.spawnNPC = async function(opts={}) {
   this.npcs.push(npc);
 };
 
-MapleMap.loadNPCs = async function(wzNode) {
-  for (const npcNode of wzNode.nChildren.filter(n => n.type.nValue === 'n')) {
+MapleMap.loadNPCs = async function (wzNode) {
+  for (const npcNode of wzNode.nChildren.filter((n) => n.type.nValue === "n")) {
     await this.spawnNPC({
       oId: null,
       id: npcNode.id.nValue,
       x: npcNode.x.nValue,
       cy: npcNode.cy.nValue,
-      f: npcNode.nGet('f').nGet('nValue', 0),
+      f: npcNode.nGet("f").nGet("nValue", 0),
       fh: npcNode.fh.nValue,
       rx0: npcNode.rx0.nValue,
       rx1: npcNode.rx1.nValue,
@@ -220,8 +213,8 @@ MapleMap.loadNPCs = async function(wzNode) {
   }
 };
 
-MapleMap.loadBoundaries = function(wzNode, footholds) {
-  if ('VRLeft' in wzNode.info) {
+MapleMap.loadBoundaries = function (wzNode, footholds) {
+  if ("VRLeft" in wzNode.info) {
     return {
       left: wzNode.info.VRLeft.nValue,
       right: wzNode.info.VRRight.nValue,
@@ -248,35 +241,33 @@ MapleMap.loadBoundaries = function(wzNode, footholds) {
   };
 };
 
-MapleMap.update = function(msPerTick) {
+MapleMap.update = function (msPerTick) {
   if (!this.doneLoading) {
     return;
   }
 
   // handle destroyed objects
-  this.monsters = this.monsters.filter(m => !m.destroyed);
+  this.monsters = this.monsters.filter((m) => !m.destroyed);
 
-  this.backgrounds.forEach(bg => bg.update(msPerTick));
-  this.objects.forEach(obj => obj.update(msPerTick));
-  this.npcs.forEach(npc => npc.update(msPerTick));
-  this.monsters.forEach(mob => mob.update(msPerTick));
-  this.characters.forEach(chr => chr.update(msPerTick));
-  this.portals.forEach(p => p.update(msPerTick));
-
-  MyCharacter.update(msPerTick);
+  this.backgrounds.forEach((bg) => bg.update(msPerTick));
+  this.objects.forEach((obj) => obj.update(msPerTick));
+  this.npcs.forEach((npc) => npc.update(msPerTick));
+  this.monsters.forEach((mob) => mob.update(msPerTick));
+  this.characters.forEach((chr) => chr.update(msPerTick));
+  this.portals.forEach((p) => p.update(msPerTick));
 };
 
-MapleMap.render = function(camera, lag, msPerTick, tdelta) {
+MapleMap.render = function (camera, lag, msPerTick, tdelta) {
   if (!this.doneLoading) {
     return;
   }
 
-  const draw = obj => obj.draw(camera, lag, msPerTick, tdelta);
+  const draw = (obj) => obj.draw(camera, lag, msPerTick, tdelta);
 
-  this.backgrounds.filter(bg => !bg.front).forEach(draw);
+  this.backgrounds.filter((bg) => !bg.front).forEach(draw);
 
   for (let i = 0; i <= 7; i += 1) {
-    const inCurrentLayer = obj => obj.layer === i;
+    const inCurrentLayer = (obj) => obj.layer === i;
     this.objects.filter(inCurrentLayer).forEach(draw);
     this.tiles.filter(inCurrentLayer).forEach(draw);
     this.monsters.filter(inCurrentLayer).forEach(draw);
@@ -284,23 +275,19 @@ MapleMap.render = function(camera, lag, msPerTick, tdelta) {
     this.npcs.filter(inCurrentLayer).forEach(draw);
   }
   // how about obj.layer = null?
-  const notInAnyLayer = obj => !(obj.layer >= 0 && obj.layer <= 7);
+  const notInAnyLayer = (obj) => !(obj.layer >= 0 && obj.layer <= 7);
 
   this.monsters.filter(notInAnyLayer).forEach(draw);
   this.characters.filter(notInAnyLayer).forEach(draw);
   this.npcs.filter(notInAnyLayer).forEach(draw);
 
-  if (!!MyCharacter.active) {
-    MyCharacter.draw(camera, lag, msPerTick, tdelta);
-  }
-
   this.portals.forEach(draw);
 
-  this.backgrounds.filter(bg => !!bg.front).forEach(draw);
+  this.backgrounds.filter((bg) => !!bg.front).forEach(draw);
 
   // draw speech bubbles
   // draw levelup
-  const drawLevelUp = c => {
+  const drawLevelUp = (c) => {
     const levelUpFrame = c.levelUpFrames[c.levelUpFrame];
     DRAW_IMAGE({
       img: levelUpFrame.nGetImage(),
@@ -308,10 +295,7 @@ MapleMap.render = function(camera, lag, msPerTick, tdelta) {
       dy: c.y - levelUpFrame.origin.nY - camera.y,
     });
   };
-  this.characters.filter(c => !!c.levelingUp).forEach(drawLevelUp);
-  if (!!MyCharacter.levelingUp) {
-    drawLevelUp(MyCharacter);
-  }
+  this.characters.filter((c) => !!c.levelingUp).forEach(drawLevelUp);
   // draw damage
 
   Object.values(this.footholds).forEach(draw);

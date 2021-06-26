@@ -1,14 +1,14 @@
-'use strict';
+"use strict";
 
 /**
  * Module dependencies.
  * @private
  */
-const http = require('http');
-const express = require('express');
-const config = require('../../config');
-const WZManager = require('./wzmanager');
-const SocketManager = require('./socketmanager');
+const http = require("http");
+const express = require("express");
+const config = require("../../config");
+const WZManager = require("./wzmanager");
+const SocketManager = require("./socketmanager");
 
 /**
  * Module exports.

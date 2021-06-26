@@ -1,19 +1,17 @@
-import DRAW_IMAGE from './drawimage';
-import DRAW_TEXT from './drawtext';
-import DRAW_RECT from './drawrect';
-import GameCanvas from './gamecanvas';
-import WZManager from './wzmanager';
-import UICommon from './uicommon';
-import MapleInput from './mapleinput';
-import MapleMap from './maplemap';
-import GUIUtil from './guiutil';
-import Random from './random';
+import { DRAW_IMAGE, DRAW_TEXT } from "./draw";
+import GameCanvas from "./gamecanvas";
+import WZManager from "./wzmanager";
+import UICommon from "./uicommon";
+import MapleInput from "./mapleinput";
+import MapleMap from "./maplemap";
+import GUIUtil from "./guiutil";
+import Random from "./random";
 
 const UILogin = {};
 
-UILogin.initialize = async function() {
+UILogin.initialize = async function () {
   await UICommon.initialize();
-  const uiLogin = await WZManager.get('UI.wz/Login.img');
+  const uiLogin = await WZManager.get("UI.wz/Login.img");
 
   this.clicked = false;
   this.lastClickedPosition = {};
@@ -25,26 +23,25 @@ UILogin.initialize = async function() {
     x: 442,
     y: 240,
     width: 142,
-    color: '#ffffff',
+    color: "#ffffff",
   });
   this.inputPwd = new MapleInput({
     x: 442,
     y: 269,
     width: 142,
-    color: '#ffffff',
-    type: 'password',
+    color: "#ffffff",
+    type: "password",
   });
 
   this.loginButtonX = 223;
   this.loginButtonY = -85;
   this.loginButton = {
-    stance: 'normal',
+    stance: "normal",
     stances: uiLogin.Title.BtLogin.nChildren.reduce((stances, stance) => {
       stances[stance.nName] = stance.nChildren[0];
       return stances;
     }, {}),
-    update: msPerTick => {
-    },
+    update: (msPerTick) => {},
     draw: (camera, lag, msPerTick, tdelta) => {
       const currentFrame = this.loginButton.stances[this.loginButton.stance];
       const currentImage = currentFrame.nGetImage();
@@ -71,7 +68,7 @@ UILogin.initialize = async function() {
   this.newCharStats = Random.generateDiceRollStats();
 };
 
-UILogin.doUpdate = function(msPerTick, camera) {
+UILogin.doUpdate = function (msPerTick, camera) {
   const mousePoint = { x: GameCanvas.mouseX, y: GameCanvas.mouseY };
   const clickedOnLastUpdate = this.clicked;
   const clickedOnThisUpdate = GameCanvas.clicked;
@@ -108,11 +105,11 @@ UILogin.doUpdate = function(msPerTick, camera) {
     this.activeButton = currActiveButton;
 
     // reset all buttons
-    this.loginButton.stance = 'normal';
+    this.loginButton.stance = "normal";
 
     if (this.activeButton === this.loginButton) {
       UICommon.playMouseHoverAudio();
-      this.loginButton.stance = 'mouseOver';
+      this.loginButton.stance = "mouseOver";
     }
   }
 
@@ -123,14 +120,14 @@ UILogin.doUpdate = function(msPerTick, camera) {
       loginButtonRect
     );
     if (clickedOnThisUpdate) {
-      const s = !originallyClickedLoginButton ? 'mouseOver' : 'pressed';
+      const s = !originallyClickedLoginButton ? "mouseOver" : "pressed";
       this.loginButton.stance = s;
     } else {
-      this.loginButton.stance = 'mouseOver';
+      this.loginButton.stance = "mouseOver";
       const trigger = releasedClick && originallyClickedLoginButton;
       if (trigger) {
         UICommon.playMouseClickAudio();
-        console.log('login!');
+        console.log("login!");
       }
     }
   } else if (this.activeButton === this.dice) {
@@ -173,7 +170,7 @@ UILogin.doUpdate = function(msPerTick, camera) {
   UICommon.doUpdate(msPerTick);
 };
 
-UILogin.doRender = function(camera, lag, msPerTick, tdelta) {
+UILogin.doRender = function (camera, lag, msPerTick, tdelta) {
   const currDiceFrame = this.dice[this.diceFrame];
   const currDiceImage = currDiceFrame.nGetImage();
   DRAW_IMAGE({
@@ -189,8 +186,8 @@ UILogin.doRender = function(camera, lag, msPerTick, tdelta) {
   });
 
   DRAW_TEXT({
-    text: 'Ver. 0.62',
-    fontWeight: 'bold',
+    text: "Ver. 0.62",
+    fontWeight: "bold",
     x: 595,
     y: 13,
   });
@@ -198,7 +195,7 @@ UILogin.doRender = function(camera, lag, msPerTick, tdelta) {
   UICommon.doRender(camera, lag, msPerTick, tdelta);
 };
 
-UILogin.removeInputs = function() {
+UILogin.removeInputs = function () {
   this.inputUsn.remove();
   this.inputPwd.remove();
   this.inputUsn = null;

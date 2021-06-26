@@ -1,11 +1,11 @@
-import BASE64_HEADERS from './base64headers';
+import BASE64_HEADERS from "./base64headers";
 
 class WZNode {
-  constructor(obj, nParent=null) {
+  constructor(obj, nParent = null) {
     this.nParent = nParent;
     this.nChildren = [];
 
-    const isTag = key => key !== '$$' && key.charAt(0) === '$';
+    const isTag = (key) => key !== "$$" && key.charAt(0) === "$";
     const $tagName = Object.keys(obj).find(isTag);
     this.nTagName = $tagName.substr(1);
     this.nName = obj[$tagName];
@@ -40,22 +40,22 @@ class WZNode {
        * The nKey itself has no collision because there does not exist a node
        * and a key in the WZ files such that node.key = n[A-Z]
        */
-      if (key.charAt(0) !== '$') {
+      if (key.charAt(0) !== "$") {
         const nKey = `n${key.charAt(0).toUpperCase()}${key.substr(1)}`;
         this[nKey] = isNaN(value) ? value : parseFloat(value);
       }
     });
 
     if (!!obj.$$) {
-      obj.$$.forEach(childObj => {
+      obj.$$.forEach((childObj) => {
         const child = new WZNode(childObj, this);
         this[child.nName] = child;
         this.nChildren.push(child);
       });
     }
   }
-  nGet(key, defaultValue=new WZNode({ '$imgdir': '' })) {
-    return (key in this) ? this[key] : defaultValue;
+  nGet(key, defaultValue = new WZNode({ $imgdir: "" })) {
+    return key in this ? this[key] : defaultValue;
   }
   nGetChild(childCallback) {
     for (const child of this.nChildren) {
@@ -66,12 +66,12 @@ class WZNode {
     return null;
   }
   nResolveUOL() {
-    if (this.nTagName === 'uol') {
-      let ret = `${this.nValue}`.split('/').reduce((pointer, pathName) => {
-        return pathName === '..' ? pointer.nParent : pointer[pathName];
+    if (this.nTagName === "uol") {
+      let ret = `${this.nValue}`.split("/").reduce((pointer, pathName) => {
+        return pathName === ".." ? pointer.nParent : pointer[pathName];
       }, this.nParent);
 
-      while (ret.nTagName === 'uol') {
+      while (ret.nTagName === "uol") {
         ret = ret.nResolveUOL();
       }
 
@@ -79,7 +79,7 @@ class WZNode {
     }
   }
   nGetPath() {
-    let ret = '';
+    let ret = "";
     let pointer = this;
     while (!!pointer) {
       ret = `${pointer.nName}/${ret}`;

@@ -1,5 +1,5 @@
-import WZManager from './wzmanager';
-import DRAW_IMAGE from './drawimage';
+import WZManager from "./wzmanager";
+import { DRAW_IMAGE } from "./draw";
 
 class Obj {
   static async fromWzNode(wzNode) {
@@ -13,23 +13,19 @@ class Obj {
   async load() {
     const wzNode = this.wzNode;
     const oS = wzNode.oS.nValue;
-    const [l0, l1, l2] = [
-      wzNode.l0.nValue,
-      wzNode.l1.nValue,
-      wzNode.l2.nValue,
-    ];
+    const [l0, l1, l2] = [wzNode.l0.nValue, wzNode.l1.nValue, wzNode.l2.nValue];
     const objFile = await WZManager.get(`Map.wz/Obj/${oS}.img`);
     const spriteNode = objFile[l0][l1][l2];
 
     this.spriteNode = spriteNode;
     this.frames = [];
-    spriteNode.nChildren.forEach(frame => {
-      if (frame.nTagName === 'canvas' || frame.nTagName === 'uol') {
-        const Frame = frame.nTagName === 'uol' ? frame.nResolveUOL() : frame;
+    spriteNode.nChildren.forEach((frame) => {
+      if (frame.nTagName === "canvas" || frame.nTagName === "uol") {
+        const Frame = frame.nTagName === "uol" ? frame.nResolveUOL() : frame;
         this.frames.push(Frame);
-      } else if (frame.nName === 'repeat') {
+      } else if (frame.nName === "repeat") {
         this.repeat = frame.nValue;
-      } else if (frame.nName === 'seat') {
+      } else if (frame.nName === "seat") {
       } else {
         console.log(`Unhandled frame=${frame.nTagName} for cls=Obj `, this);
       }
@@ -44,17 +40,17 @@ class Obj {
     this.zid = parseInt(wzNode.nName);
     this.flipped = wzNode.f.nValue;
 
-    this.flow = wzNode.nGet('flow').nGet('nValue', 0);
-    this.cx = wzNode.nGet('cx').nGet('nValue', 0);
-    this.rx = wzNode.nGet('rx').nGet('nValue', 0);
-    this.cy = wzNode.nGet('cy').nGet('nValue', 0);
-    this.ry = wzNode.nGet('ry').nGet('nValue', 0);
+    this.flow = wzNode.nGet("flow").nGet("nValue", 0);
+    this.cx = wzNode.nGet("cx").nGet("nValue", 0);
+    this.rx = wzNode.nGet("rx").nGet("nValue", 0);
+    this.cy = wzNode.nGet("cy").nGet("nValue", 0);
+    this.ry = wzNode.nGet("ry").nGet("nValue", 0);
   }
-  setFrame(frame=0, carryOverDelay=0) {
+  setFrame(frame = 0, carryOverDelay = 0) {
     this.frame = !this.frames[frame] ? 0 : frame;
 
     this.delay = carryOverDelay;
-    this.nextDelay = this.frames[this.frame].nGet('delay').nGet('nValue', 100);
+    this.nextDelay = this.frames[this.frame].nGet("delay").nGet("nValue", 100);
   }
   advanceFrame() {
     let nextFrame = this.frame + 1;
@@ -81,52 +77,52 @@ class Obj {
     const boundaries = camera.boundaries;
     const width = currentFrame.nWidth;
     const height = currentFrame.nHeight;
-    const cx = Math.abs(this.cx) || boundaries.right-boundaries.left-45;
-    const cy = Math.abs(this.cy) || boundaries.bottom-boundaries.top-160;
-    const originX = currentFrame.nGet('origin').nGet('nX', 0);
-    const originY = currentFrame.nGet('origin').nGet('nY', 0);
+    const cx = Math.abs(this.cx) || boundaries.right - boundaries.left - 45;
+    const cy = Math.abs(this.cy) || boundaries.bottom - boundaries.top - 160;
+    const originX = currentFrame.nGet("origin").nGet("nX", 0);
+    const originY = currentFrame.nGet("origin").nGet("nY", 0);
 
     let dx = this.x;
     let dy = this.y;
 
-    dx -= !this.flipped ? originX : (width-originX);
+    dx -= !this.flipped ? originX : width - originX;
     dy -= originY;
 
-    const moveType = firstFrame.nGet('moveType').nGet('nValue', 0);
-    const moveW = firstFrame.nGet('moveW').nGet('nValue', 0);
-    const moveH = firstFrame.nGet('moveH').nGet('nValue', 0);
-    const moveP = firstFrame.nGet('moveP').nGet('nValue', Math.PI*2*1000);
+    const moveType = firstFrame.nGet("moveType").nGet("nValue", 0);
+    const moveW = firstFrame.nGet("moveW").nGet("nValue", 0);
+    const moveH = firstFrame.nGet("moveH").nGet("nValue", 0);
+    const moveP = firstFrame.nGet("moveP").nGet("nValue", Math.PI * 2 * 1000);
     switch (moveType) {
       case 1: {
-        dx += moveW * Math.sin(Math.PI*2*tdelta / moveP);
+        dx += moveW * Math.sin((Math.PI * 2 * tdelta) / moveP);
         break;
       }
       case 2: {
-        dy += moveH * Math.sin(Math.PI*2*tdelta / moveP);
+        dy += moveH * Math.sin((Math.PI * 2 * tdelta) / moveP);
         break;
       }
       case 3: {
-        dx += moveW * Math.cos(Math.PI*2*tdelta / moveP);
-        dy += moveH * Math.sin(Math.PI*2*tdelta / moveP);
+        dx += moveW * Math.cos((Math.PI * 2 * tdelta) / moveP);
+        dy += moveH * Math.sin((Math.PI * 2 * tdelta) / moveP);
         break;
       }
     }
 
-    const moveR = firstFrame.nGet('moveR').nGet('nValue', 0);
-    const angle = moveR === 0 ? 0 : (tdelta*360/moveR) % 360;
+    const moveR = firstFrame.nGet("moveR").nGet("nValue", 0);
+    const angle = moveR === 0 ? 0 : ((tdelta * 360) / moveR) % 360;
 
     let a0 = 1;
     let a1 = 1;
-    if ('a0' in currentFrame || 'a1' in currentFrame) {
-      a0 = currentFrame.nGet('a0').nGet('nValue', 0) / 255;
-      a1 = currentFrame.nGet('a1').nGet('nValue', a0*255) / 255;
+    if ("a0" in currentFrame || "a1" in currentFrame) {
+      a0 = currentFrame.nGet("a0").nGet("nValue", 0) / 255;
+      a1 = currentFrame.nGet("a1").nGet("nValue", a0 * 255) / 255;
     }
-    const percent = this.delay/this.nextDelay;
-    const alpha = percent*a1 + (1-percent)*a0;
+    const percent = this.delay / this.nextDelay;
+    const alpha = percent * a1 + (1 - percent) * a0;
 
     // wtf is flow===3?
     if (this.flow === 1) {
-      dx += (tdelta*this.rx/200) - camera.x;
+      dx += (tdelta * this.rx) / 200 - camera.x;
       let xBegin = dx;
       let xEnd = dx;
 
@@ -148,14 +144,14 @@ class Obj {
         DRAW_IMAGE({
           img: currentImage,
           flipped: !!this.flipped,
-          dy: dy-camera.y,
+          dy: dy - camera.y,
           alpha,
           angle,
           dx,
         });
       }
     } else if (this.flow === 2) {
-      dy += (tdelta*this.ry/200) - camera.y;
+      dy += (tdelta * this.ry) / 200 - camera.y;
       let yBegin = dy;
       let yEnd = dy;
 
@@ -177,7 +173,7 @@ class Obj {
         DRAW_IMAGE({
           img: currentImage,
           flipped: !!this.flipped,
-          dx: dx-camera.x,
+          dx: dx - camera.x,
           alpha,
           angle,
           dy,
@@ -186,8 +182,8 @@ class Obj {
     } else {
       DRAW_IMAGE({
         img: currentImage,
-        dx: dx-camera.x,
-        dy: dy-camera.y,
+        dx: dx - camera.x,
+        dy: dy - camera.y,
         flipped: !!this.flipped,
         alpha,
         angle,

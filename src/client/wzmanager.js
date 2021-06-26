@@ -1,10 +1,9 @@
-import LOAD_JSON from './loadjson';
-import WZNode from './wznode';
+import WZNode from "./wznode";
 
 const WZManager = {};
 
-WZManager.initialize = function() {
-  this.cache = new WZNode({ '$dir': '' });
+WZManager.initialize = function () {
+  this.cache = new WZNode({ $dir: "" });
 };
 
 /**
@@ -15,17 +14,22 @@ WZManager.initialize = function() {
  * @example WZManager.load('Map.wz/Map/Map1/100000000.img');
  * @example WZManager.load('Character.wz/Cap/01002357.img');
  */
-WZManager.load = async function(filename) {
-  const json = await LOAD_JSON(`wz_client/${filename}.json`);
+WZManager.load = async function (filename) {
+  const json = await fetch(`wz_client/${filename}.json`).then((res) =>
+    res.json()
+  );
 
   let tree = this.cache;
-  filename.split('/').slice(0, -1).forEach(p => {
-    if (!(p in tree)) {
-      tree[p] = new WZNode({ '$dir': p }, tree);
-      tree.nChildren.push(tree[p]);
-    }
-    tree = tree[p];
-  });
+  filename
+    .split("/")
+    .slice(0, -1)
+    .forEach((p) => {
+      if (!(p in tree)) {
+        tree[p] = new WZNode({ $dir: p }, tree);
+        tree.nChildren.push(tree[p]);
+      }
+      tree = tree[p];
+    });
 
   const subtree = new WZNode(json, tree);
   tree[subtree.nName] = subtree;
@@ -41,9 +45,9 @@ WZManager.load = async function(filename) {
  * @param {string} thePath - WZ path.
  * @return {Boolean} True if path exists, false otherwise.
  */
-WZManager.pathExists = function(thePath) {
+WZManager.pathExists = function (thePath) {
   let tree = this.cache;
-  for (const p of thePath.split('/')) {
+  for (const p of thePath.split("/")) {
     if (tree === undefined || tree[p] === undefined) {
       return false;
     }
@@ -52,13 +56,13 @@ WZManager.pathExists = function(thePath) {
   return true;
 };
 
-WZManager.get = async function(thePath) {
+WZManager.get = async function (thePath) {
   if (!this.pathExists(thePath)) {
-    const filename = `${thePath.split('.img')[0]}.img`;
+    const filename = `${thePath.split(".img")[0]}.img`;
     await this.load(filename);
   }
   let tree = this.cache;
-  thePath.split('/').forEach(p => {
+  thePath.split("/").forEach((p) => {
     tree = tree[p];
   });
   return tree;
