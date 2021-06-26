@@ -1,4 +1,3 @@
-import LOAD_JSON from "./loadjson";
 import WZNode from "./wznode";
 
 const WZManager = {};
@@ -16,7 +15,9 @@ WZManager.initialize = function () {
  * @example WZManager.load('Character.wz/Cap/01002357.img');
  */
 WZManager.load = async function (filename) {
-  const json = await LOAD_JSON(`wz_client/${filename}.json`);
+  const json = await fetch(`wz_client/${filename}.json`).then((res) =>
+    res.json()
+  );
 
   let tree = this.cache;
   filename
