@@ -1,6 +1,5 @@
 import WZManager from "./wzmanager";
-import DRAW_IMAGE from "./drawimage";
-import DRAW_RECT from "./drawrect";
+import { DRAW_IMAGE } from "./draw";
 
 class Portal {
   static async fromWzNode(wzNode) {

@@ -1,5 +1,5 @@
 import WZManager from "./wzmanager";
-import DRAW_IMAGE from "./drawimage";
+import { DRAW_IMAGE } from "./draw";
 
 class Obj {
   static async fromWzNode(wzNode) {

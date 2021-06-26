@@ -1,8 +1,5 @@
 import WZManager from "./wzmanager";
-import DRAW_IMAGE from "./drawimage";
-import DRAW_TEXT from "./drawtext";
-import DRAW_RECT from "./drawrect";
-import MEASURE_TEXT from "./measuretext";
+import { DRAW_IMAGE, DRAW_TEXT, DRAW_RECT, MEASURE_TEXT } from "./draw";
 import PLAY_AUDIO from "./playaudio";
 import { Physics } from "./physics";
 

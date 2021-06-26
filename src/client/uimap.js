@@ -1,5 +1,4 @@
-import DRAW_IMAGE from "./drawimage";
-import DRAW_TEXT from "./drawtext";
+import { DRAW_IMAGE, DRAW_TEXT } from "./draw";
 import GameCanvas from "./gamecanvas";
 import MyCharacter from "./mycharacter";
 import WZManager from "./wzmanager";

@@ -1,3 +1,4 @@
 const CANVAS = document.querySelector("#game");
+const CANVAS_CTX = CANVAS.getContext("2d");
 
-export default CANVAS;
+export { CANVAS, CANVAS_CTX };

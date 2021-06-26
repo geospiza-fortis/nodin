@@ -1,4 +1,4 @@
-import DRAW_LINE from "./drawline";
+import { DRAW_LINE } from "./draw";
 
 class Foothold {
   static fromWzNode(wzNode) {

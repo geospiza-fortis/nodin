@@ -1,5 +1,5 @@
 import WZManager from "./wzmanager";
-import DRAW_IMAGE from "./drawimage";
+import { DRAW_IMAGE } from "./draw";
 
 import Background from "./background";
 import Foothold from "./foothold";

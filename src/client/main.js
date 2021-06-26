@@ -1,5 +1,5 @@
 import GameLoop from "./gameloop";
-import DRAW_RECT from "./drawrect";
+import { DRAW_RECT } from "./draw";
 import Timer from "./timer";
 import GameCanvas from "./gamecanvas";
 import WZManager from "./wzmanager";

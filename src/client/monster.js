@@ -1,6 +1,6 @@
 import WZManager from "./wzmanager";
 import PLAY_AUDIO from "./playaudio";
-import DRAW_IMAGE from "./drawimage";
+import { DRAW_IMAGE } from "./draw";
 
 class Monster {
   static async fromOpts(opts) {
