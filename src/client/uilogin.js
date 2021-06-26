@@ -1,4 +1,3 @@
-import GameCanvas from "./gamecanvas";
 import WZManager from "./wzmanager";
 import UICommon from "./uicommon";
 import MapleInput from "./mapleinput";
@@ -12,25 +11,15 @@ UILogin.initialize = async function () {
   await UICommon.initialize();
   const uiLogin = await WZManager.get("UI.wz/Login.img");
 
+  this.firstUpdate = true;
   this.clicked = false;
   this.lastClickedPosition = {};
   this.activeButton = null;
 
   this.frameImg = uiLogin.Common.frame.nGetImage();
 
-  this.inputUsn = new MapleInput({
-    x: 442,
-    y: 240,
-    width: 142,
-    color: "#ffffff",
-  });
-  this.inputPwd = new MapleInput({
-    x: 442,
-    y: 269,
-    width: 142,
-    color: "#ffffff",
-    type: "password",
-  });
+  this.inputUsn = null;
+  this.inputPwd = null;
 
   this.loginButtonX = 223;
   this.loginButtonY = -85;
@@ -67,10 +56,27 @@ UILogin.initialize = async function () {
   this.newCharStats = Random.generateDiceRollStats();
 };
 
-UILogin.doUpdate = function (msPerTick, camera) {
-  const mousePoint = { x: GameCanvas.mouseX, y: GameCanvas.mouseY };
+UILogin.doUpdate = function (msPerTick, camera, canvas) {
+  if (this.firstUpdate) {
+    this.inputUsn = new MapleInput(canvas, {
+      x: 442,
+      y: 240,
+      width: 142,
+      color: "#ffffff",
+    });
+    this.inputPwd = new MapleInput(canvas, {
+      x: 442,
+      y: 269,
+      width: 142,
+      color: "#ffffff",
+      type: "password",
+    });
+    this.firstUpdate = false;
+  }
+
+  const mousePoint = { x: canvas.mouseX, y: canvas.mouseY };
   const clickedOnLastUpdate = this.clicked;
-  const clickedOnThisUpdate = GameCanvas.clicked;
+  const clickedOnThisUpdate = canvas.clicked;
   const releasedClick = clickedOnLastUpdate && !clickedOnThisUpdate;
   const lastActiveButton = this.activeButton;
   let currActiveButton = null;
@@ -166,7 +172,7 @@ UILogin.doUpdate = function (msPerTick, camera) {
     this.clicked = false;
   }
 
-  UICommon.doUpdate(msPerTick);
+  UICommon.doUpdate(msPerTick, camera, canvas);
 };
 
 UILogin.doRender = function (canvas, camera, lag, msPerTick, tdelta) {
@@ -195,8 +201,8 @@ UILogin.doRender = function (canvas, camera, lag, msPerTick, tdelta) {
 };
 
 UILogin.removeInputs = function () {
-  this.inputUsn.remove();
-  this.inputPwd.remove();
+  if (this.inputUsn) this.inputUsn.remove();
+  if (this.inputPwd) this.inputPwd.remove();
   this.inputUsn = null;
   this.inputPwd = null;
 };

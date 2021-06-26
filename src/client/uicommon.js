@@ -1,4 +1,3 @@
-import GameCanvas from "./gamecanvas";
 import WZManager from "./wzmanager";
 import PLAY_AUDIO from "./playaudio";
 
@@ -30,19 +29,19 @@ UICommon.playMouseHoverAudio = function () {
 UICommon.doUpdate = function (msPerTick) {};
 
 UICommon.doRender = function (canvas, camera, lag, msPerTick, tdelta) {
-  const clicked = GameCanvas.clicked;
+  const clicked = canvas.clicked;
   const cursorImg = !clicked ? this.cursorImg : this.cursorDownImg;
   const cursorOrigin = !clicked ? this.cursorOrigin : this.cursorDownOrigin;
 
   cursorImg.style.position = "absolute";
   cursorImg.style.zIndex = 4;
   cursorImg.style.pointerEvents = "none";
-  cursorImg.style.left = `${GameCanvas.mouseX - cursorOrigin.nX}px`;
-  cursorImg.style.top = `${GameCanvas.mouseY - cursorOrigin.nY}px`;
+  cursorImg.style.left = `${canvas.mouseX - cursorOrigin.nX}px`;
+  cursorImg.style.top = `${canvas.mouseY - cursorOrigin.nY}px`;
 
   !!this.currentCursor && this.currentCursor.remove();
   this.currentCursor = cursorImg;
-  GameCanvas.gameWrapper.appendChild(cursorImg);
+  canvas.gameWrapper.appendChild(cursorImg);
 };
 
 export default UICommon;

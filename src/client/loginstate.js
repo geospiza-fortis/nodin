@@ -16,10 +16,10 @@ LoginState.initialize = async function () {
   Camera.y = -308;
 };
 
-LoginState.doUpdate = function (msPerTick, camera) {
+LoginState.doUpdate = function (msPerTick, camera, canvas) {
   if (!!MapleMap.doneLoading) {
     MapleMap.update(msPerTick);
-    UILogin.doUpdate(msPerTick, camera);
+    UILogin.doUpdate(msPerTick, camera, canvas);
   }
 };
 

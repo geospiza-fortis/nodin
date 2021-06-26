@@ -12,9 +12,9 @@ StateManager.setState = async function (state) {
   this.transitioning = false;
 };
 
-StateManager.doUpdate = function (msPerTick, camera) {
+StateManager.doUpdate = function (msPerTick, camera, canvas) {
   if (!this.transitioning) {
-    this.currentState.doUpdate(msPerTick, camera);
+    this.currentState.doUpdate(msPerTick, camera, canvas);
   }
 };
 

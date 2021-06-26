@@ -24,8 +24,8 @@ const GameLoop = {
   lag: 0,
 };
 
-GameLoop.doUpdate = function (msPerTick, camera) {
-  StateManager.doUpdate(msPerTick, camera);
+GameLoop.doUpdate = function (msPerTick, camera, canvas) {
+  StateManager.doUpdate(msPerTick, camera, canvas);
 };
 
 GameLoop.doRender = function (canvas, camera, lag, msPerTick, tdelta) {
@@ -45,7 +45,8 @@ GameLoop.gameLoop = function (highResTimestamp) {
   while (GameLoop.lag >= GameLoop.msPerTick) {
     GameLoop.lag -= GameLoop.msPerTick;
     Timer.tdelta += GameLoop.msPerTick;
-    GameLoop.doUpdate(GameLoop.msPerTick, Camera);
+    // TODO: fix ordering of these variables
+    GameLoop.doUpdate(GameLoop.msPerTick, Camera, GameCanvas);
   }
   GameLoop.doRender(
     GameCanvas,
