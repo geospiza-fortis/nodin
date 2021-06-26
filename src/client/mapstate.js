@@ -30,14 +30,8 @@ MapState.doUpdate = function (msPerTick) {
 
     if (GameCanvas.isKeyDown("up")) MyCharacter.pos.up = true;
     if (GameCanvas.isKeyDown("down")) MyCharacter.pos.down = true;
-    if (GameCanvas.isKeyDown("left")) {
-      MyCharacter.faceLeft();
-      MyCharacter.pos.left = true;
-    }
-    if (GameCanvas.isKeyDown("right")) {
-      MyCharacter.faceRight();
-      MyCharacter.pos.right = true;
-    }
+    if (GameCanvas.isKeyDown("left")) MyCharacter.pos.left = true;
+    if (GameCanvas.isKeyDown("right")) MyCharacter.pos.right = true;
     if (GameCanvas.isKeyDown("alt")) MyCharacter.pos.jump();
     MyCharacter.update(msPerTick);
 

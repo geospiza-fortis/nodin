@@ -200,15 +200,6 @@ class MapleCharacter {
   activate() {
     this.active = true;
   }
-  flip() {
-    this.flipped = !this.flipped;
-  }
-  faceLeft() {
-    this.flipped = false;
-  }
-  faceRight() {
-    this.flipped = true;
-  }
   async playLevelUp() {
     const levelUpNode = await WZManager.get("Sound.wz/Game.img/LevelUp");
     const levelUpAudio = levelUpNode.nGetAudio();
@@ -390,6 +381,22 @@ class MapleCharacter {
     return drawableFrames;
   }
   draw(camera, lag, msPerTick, tdelta) {
+    // set whether the character is flipped prior to drawing
+    if (this.pos.right && !this.pos.left) {
+      this.flipped = true;
+    } else if (this.pos.left && !this.pos.right) {
+      this.flipped = false;
+    }
+
+    // set the stance
+    if (!this.pos.fh) {
+      this.setStance("jump");
+    } else if (this.pos.left ^ this.pos.right) {
+      this.setStance("walk1");
+    } else {
+      this.setStance("stand1");
+    }
+
     const characterIsFlipped = !!this.flipped;
     const imgdir = this.baseBody[this.stance][this.frame];
     const imgdirFlip = !!imgdir.nGet("flip").nGet("nValue", 0);
