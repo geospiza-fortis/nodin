@@ -85,12 +85,13 @@ class MapleCharacter {
     this.skinColor = sc;
   }
   setStance(stance = "stand1", frame = 0) {
-    if (!!this.baseBody[stance]) {
-      this.stance = stance;
-      this.setFrame(frame);
-      this.oscillateFrames = stance.startsWith("stand");
-      this.oscillateFactor = 1;
+    if (!this.baseBody[stance] || this.stance == stance) {
+      return;
     }
+    this.stance = stance;
+    this.setFrame(frame);
+    this.oscillateFrames = stance.startsWith("stand");
+    this.oscillateFactor = 1;
   }
   setFrame(frame = 0, carryOverDelay = 0) {
     this.frame = !this.baseBody[this.stance][frame] ? 0 : frame;
