@@ -16,29 +16,16 @@
 </div>
 
 <style>
-  * {
-    font-family: Arial, sans-serif;
-  }
-
   #game-wrapper {
     /*border: 4px solid #000000;*/
     width: 800x;
     height: 600px;
-    position: absolute;
-    top: 0px;
-    left: 0px;
     transform: scale(1, 1);
     z-index: 1;
     cursor: none;
   }
 
   #game {
-    position: absolute;
-    width: inherit;
-    height: inherit;
-    /*border: 1px solid #ff0000;*/
-    margin-top: 0px;
-    margin-left: 0px;
     z-index: 2;
   }
 </style>
