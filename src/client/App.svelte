@@ -34,6 +34,15 @@
   });
 </script>
 
+<h1>
+  nodin
+  <a href="https://github.com/geospiza-fortis/nodin">geospiza's fork</a>
+  __VERSION__
+  <a href="https://github.com/geospiza-fortis/nodin/commit/__GIT_COMMIT__">
+    (__GIT_COMMIT__)
+  </a>
+</h1>
+
 <Canvas bind:canvas />
 
 <h2>character</h2>
