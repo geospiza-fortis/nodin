@@ -6,6 +6,7 @@
   import MySocket from "./mysocket";
   import StateManager from "./statemanager";
   import LoginState from "./loginstate";
+  import MyCharacter from "./mycharacter";
 
   import Canvas from "./Canvas.svelte";
   import { onMount } from "svelte";
@@ -34,3 +35,6 @@
 </script>
 
 <Canvas bind:canvas />
+
+<h2>character</h2>
+<label>Name <input type="text" bind:value={MyCharacter.name} /></label>
