@@ -1,5 +1,5 @@
 class GameCanvas {
-  constructor(gameWrapper, controlPanel, menuContainer) {
+  constructor(gameWrapper) {
     this.scaleX = 1;
     this.scaleY = 1;
     this.mouseX = 0;
@@ -93,104 +93,10 @@ class GameCanvas {
     this.game = gameWrapper.querySelector("#game");
     this.context = this.game.getContext("2d");
 
-    this.menuIcon = menuContainer.querySelector("#menu-icon");
-
-    this.controlPanel = controlPanel;
-    this.controlPanelX = controlPanel.querySelector("#control-panel-x");
-    this.controlPanelBar = controlPanel.querySelector("#control-panel-bar");
-    this.inputW = controlPanel.querySelector("#input-w");
-    this.inputH = controlPanel.querySelector("#input-h");
-    this.inputX = controlPanel.querySelector("#input-x");
-    this.inputY = controlPanel.querySelector("#input-y");
-
-    this.listenControlPanel();
-    this.showControlPanelOnClick();
-    this.enableControlPanelDragging();
     this.listenMouse();
     this.listenKeyboard();
   }
 
-  showControlPanel() {
-    this.controlPanel.style.display = "initial";
-  }
-  hideControlPanel() {
-    this.controlPanel.style.display = "none";
-  }
-  moveControlPanel(x, y) {
-    this.controlPanel.style.left = `${parseInt(x)}px`;
-    this.controlPanel.style.top = `${parseInt(y)}px`;
-  }
-  moveGame(x = 0, y = 0) {
-    const X = parseInt(x) || 0;
-    const Y = parseInt(y) || 0;
-    const newX = X + (this.scaleX - 1) * 400;
-    const newY = Y + (this.scaleY - 1) * 300;
-    this.gameWrapper.style.left = `${newX}px`;
-    this.gameWrapper.style.top = `${newY}px`;
-  }
-  scaleGame(width = 800, height = 600) {
-    let Width = parseInt(width);
-    let Height = parseInt(height);
-    if (isNaN(Width) || Width < 800) {
-      Width = 800;
-    }
-    if (isNaN(Height) || Height < 600) {
-      Height = 600;
-    }
-    this.scaleX = Width / 800;
-    this.scaleY = Height / 600;
-    this.gameWrapper.style.transform = `scale(${this.scaleX}, ${this.scaleY})`;
-    this.moveGame(this.inputX.value || 0, this.inputY.value || 0);
-  }
-  listenControlPanel() {
-    const inputW = this.inputW;
-    const inputH = this.inputH;
-    const inputX = this.inputX;
-    const inputY = this.inputY;
-    const detectESC = (e) => {
-      e.keyCode === 27 && this.hideControlPanel();
-    };
-    const scaleGame = () => {
-      this.scaleGame(inputW.value, inputH.value);
-    };
-    const moveGame = () => {
-      this.moveGame(inputX.value, inputY.value);
-    };
-
-    inputW.oninput = scaleGame;
-    inputH.oninput = scaleGame;
-    inputX.oninput = moveGame;
-    inputY.oninput = moveGame;
-    inputW.onkeypress = detectESC;
-    inputH.onkeypress = detectESC;
-    inputX.onkeypress = detectESC;
-    inputY.onkeypress = detectESC;
-    this.controlPanelX.onclick = this.hideControlPanel.bind(this);
-  }
-  enableControlPanelDragging() {
-    let x;
-    let y;
-    const move = (e) => this.moveControlPanel(e.clientX - x, e.clientY - y);
-    this.controlPanelBar.addEventListener(
-      "mousedown",
-      (e) => {
-        x = e.clientX - parseInt(this.controlPanel.offsetLeft);
-        y = e.clientY - parseInt(this.controlPanel.offsetTop);
-        window.addEventListener("mousemove", move, true);
-      },
-      false
-    );
-    this.controlPanelBar.addEventListener(
-      "mouseup",
-      () => {
-        window.removeEventListener("mousemove", move, true);
-      },
-      false
-    );
-  }
-  showControlPanelOnClick() {
-    this.menuIcon.onclick = this.showControlPanel.bind(this);
-  }
   listenMouse() {
     this.gameWrapper.addEventListener("mousemove", (e) => {
       const rectangle = this.gameWrapper.getBoundingClientRect();
