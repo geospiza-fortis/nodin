@@ -4,8 +4,21 @@ import resolve from "@rollup/plugin-node-resolve";
 import livereload from "rollup-plugin-livereload";
 import { terser } from "rollup-plugin-terser";
 import css from "rollup-plugin-css-only";
+import replace from "@rollup/plugin-replace";
+import child_process from "child_process";
 
 const production = !process.env.ROLLUP_WATCH;
+
+let replaceVersion = () =>
+  replace({
+    __VERSION__: process.env.npm_package_version,
+    __GIT_COMMIT__: child_process
+      .execSync("git rev-parse HEAD")
+      .toString()
+      .trim()
+      .slice(0, 8),
+    preventAssignment: true,
+  });
 
 function serve() {
   let server;
@@ -41,6 +54,7 @@ export default {
     file: "client/build/bundle.js",
   },
   plugins: [
+    replaceVersion(),
     svelte({
       compilerOptions: {
         // enable run-time checks when not in production

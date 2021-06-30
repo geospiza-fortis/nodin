@@ -6,6 +6,7 @@
   import MySocket from "./mysocket";
   import StateManager from "./statemanager";
   import LoginState from "./loginstate";
+  import MyCharacter from "./mycharacter";
 
   import Canvas from "./Canvas.svelte";
   import { onMount } from "svelte";
@@ -33,4 +34,16 @@
   });
 </script>
 
+<h1>
+  nodin
+  <a href="https://github.com/geospiza-fortis/nodin">geospiza's fork</a>
+  __VERSION__
+  <a href="https://github.com/geospiza-fortis/nodin/commit/__GIT_COMMIT__">
+    (__GIT_COMMIT__)
+  </a>
+</h1>
+
 <Canvas bind:canvas />
+
+<h2>character</h2>
+<label>Name <input type="text" bind:value={MyCharacter.name} /></label>
